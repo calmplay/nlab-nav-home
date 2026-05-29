@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231a1b26'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='%237c3aed' font-weight='bold'>C</text></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="theme-color" content="#f4f5f6" />
+    <meta name="description" content="Clash web port" />
+    <title>Clash</title>
+    <script type="module" crossorigin src="./assets/index-5e90ca00.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/vendor-827b5617.js">
+    <link rel="stylesheet" href="./assets/index-6d88662b.css">
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <div style="position:fixed;bottom:132px;left:35px;z-index:2147483647;display:flex;flex-direction:column;gap:6px;text-align:center">
+      <span id="machine-label" style="padding:6px 16px;background:rgba(69,131,216,0.15);color:#4583D8;border:1px solid #4583D8;border-radius:6px;font-size:13px">加载中</span>
+      <button id="back-home" style="padding:6px 16px;background:#4583D8;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px">返回主页</button>
+      <button id="reset-btn" style="padding:6px 16px;background:#4583D8;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px">重置</button>
+    </div>
+    <script>
+      (function(){
+        var c=document.cookie.match(/clash_machine=(\d+)/);
+        document.getElementById('machine-label').textContent=c?'dx'+c[1]+' 号机':'未选择';
+        document.getElementById('back-home').onclick=function(){location.href='/';};
+        document.getElementById('reset-btn').onclick=function(){
+          document.cookie='clash_machine=;path=/;max-age=0';
+          for(var k in localStorage){
+            if(k.startsWith('nlab.clash.secret.')||k==='externalControllers'||k==='externalControllerIndex')localStorage.removeItem(k)
+          }
+          location.href='/';
+        };
+      })();
+    </script>
+  </body>
+</html>
