@@ -31,7 +31,7 @@
 |------|--------|------|---------|
 | Prometheus | P0 | 低 | **已接入** |
 | Grafana | P1 | 中 | **已接入** |
-| Router | P2 | 中 | 待接入 |
+| Router | P2 | 中 | **测试中** |
 | iLO | P3 | 高 | 待接入 |
 
 ---
@@ -123,6 +123,24 @@
   cp /home/cy/backup/nlab-nav-grafana-<TS>/nlab-nav.conf.bak .../nlab-nav.conf
   docker exec nginx nginx -t && docker exec nginx nginx -s reload
   ```
+
+### Router（测试中，等待浏览器验证）
+
+- **接入尝试日期**: 2026-05-29
+- **接入方式**: /svc/router/ 反向代理（试接入）
+- **修改内容**: nlab-nav.conf 新增 location `/svc/router/` → `proxy_pass http://192.168.101.1/`，含 proxy_redirect 和 cookie_path
+- **nginx location**:
+  ```nginx
+  location /svc/router/ {
+      proxy_pass http://192.168.101.1/;
+      proxy_set_header Host 192.168.101.1;
+      proxy_redirect http://192.168.101.1/ /svc/router/;
+      proxy_redirect / /svc/router/;
+      proxy_cookie_path / /svc/router/;
+  }
+  ```
+- **curl 验证**: GET `/svc/router/` → 200，返回路由器 HTML（与旧 50000 端口内容一致）
+- **状态**: 等待用户浏览器验证 CSS/JS/登录是否正常。如异常则降级为 /jump/router/
 
 ---
 
