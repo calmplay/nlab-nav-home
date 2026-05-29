@@ -146,7 +146,7 @@
 
 | 服务 | 原因 |
 |------|------|
-| Clash | 旧网关依赖 cookie + WebSocket + API 动态路由，暂不迁移 |
+| Clash | **已迁移到 TS 项目**：直达入口 + 密码模态框 + 本地 secret 存储 |
 | Syncthing | 不支持子路径部署，WebSocket + 绝对路径资源 |
 | Router | /svc/router/ 浏览器白板，JS 报错 `Unexpected token '<'`，降级为 /jump/ |
 | iLO | HTTPS + WebSocket + 远程控制台，子路径反代风险极高，降级为 /jump/ |

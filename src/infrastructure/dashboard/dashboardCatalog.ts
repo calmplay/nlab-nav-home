@@ -17,6 +17,7 @@ export interface MachineButton {
   readonly label: string;
   readonly href: string;
   readonly hint?: string;
+  readonly onClick?: () => void;
 }
 
 /** 接入计划条目 */
@@ -93,18 +94,13 @@ export const DASHBOARD_TILES: readonly DashboardTileConfig[] = [
     variant: "group",
     accent: "blue",
     status: "jump",
-    primaryAction: {
-      label: "打开总入口",
-      href: "/jump/clash/",
-      enabled: true,
-    },
     machines: [
-      { label: "dx0", href: "/jump/clash/", hint: "进入旧网关后选择 dx0" },
-      { label: "dx1", href: "/jump/clash/", hint: "进入旧网关后选择 dx1" },
-      { label: "dx2", href: "/jump/clash/", hint: "进入旧网关后选择 dx2" },
-      { label: "dx3", href: "/jump/clash/", hint: "进入旧网关后选择 dx3" },
-      { label: "dx4", href: "/jump/clash/", hint: "进入旧网关后选择 dx4" },
-      { label: "dx8", href: "/jump/clash/", hint: "进入旧网关后选择 dx8" },
+      { label: "dx0", href: "", hint: "点击输入 secret 后直达 dx0 管理页" },
+      { label: "dx1", href: "", hint: "点击输入 secret 后直达 dx1 管理页" },
+      { label: "dx2", href: "", hint: "点击输入 secret 后直达 dx2 管理页" },
+      { label: "dx3", href: "", hint: "点击输入 secret 后直达 dx3 管理页" },
+      { label: "dx4", href: "", hint: "点击输入 secret 后直达 dx4 管理页" },
+      { label: "dx8", href: "", hint: "点击输入 secret 后直达 dx8 管理页" },
     ],
   },
 

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231a1b26'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='%237c3aed' font-weight='bold'>C</text></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="theme-color" content="#f4f5f6" />
+    <meta name="description" content="Clash web port" />
+    <title>Clash</title>
+    <script type="module" crossorigin src="./assets/index-5e90ca00.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/vendor-827b5617.js">
+    <link rel="stylesheet" href="./assets/index-6d88662b.css">
+  <link rel="manifest" href="./manifest.webmanifest"><script id="vite-plugin-pwa:inline-sw">if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('./sw.js', { scope: './' })})}</script></head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <div style="position:fixed;bottom:132px;left:35px;z-index:2147483647;display:flex;flex-direction:column;gap:6px;text-align:center">
+      <span id="machine-label" style="padding:6px 16px;background:rgba(69,131,216,0.15);color:#4583D8;border:1px solid #4583D8;border-radius:6px;font-size:13px">加载中</span>
+      <button onclick="location.href='http://nuist.cfushn.com:1104/'" style="padding:6px 16px;background:#4583D8;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px">返回主页</button>
+      <button id="reset-btn" style="padding:6px 16px;background:#4583D8;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px">重置 cookie</button>
+    </div>
+    <script>
+      (function(){
+        var portMap={0:17800,1:17801,2:17802,3:17803,4:17804,8:17808};
+        var p=new URLSearchParams(location.search);
+        var cm=document.cookie.match(/clash_machine=(\d+)/);
+        var cs=document.cookie.match(/clash_secret=([^;]+)/);
+        // 从 URL ?machine=dx0 或 cookie 读取机器编号
+        var raw=p.get('machine')||'';
+        var m=(cm?cm[1]:null)||raw.replace('dx','')||null;
+        if(m){document.cookie='clash_machine='+m+';path=/;max-age=86400;SameSite=Lax'}
+        document.getElementById('machine-label').textContent=m?'dx'+m+' 号机':'未选择';
+        document.getElementById('reset-btn').onclick=function(){
+          document.cookie.split(';').forEach(function(c){document.cookie=c.replace(/^ +/,'').replace(/=.*/,'=;path=/;max-age=0')});
+          for(var k in localStorage){if(k.startsWith('nlab.clash.secret.'))localStorage.removeItem(k)}
+          location.href='http://nuist.cfushn.com:1104/';
+        };
+        // 如果有 secret + machine → 自动跳转到 SPA 管理页
+        var secret=cs?decodeURIComponent(cs[1]):null;
+        if(m&&secret&&portMap[m]&&!location.hash){
+          var safe=secret.replace(/%/g,'%25').replace(/#/g,'%23').replace(/&/g,'%26').replace(/=/g,'%3D');
+          location.replace('#/proxies?host='+location.hostname+'&port='+portMap[m]+'&secret='+safe);
+        }
+      })();
+    </script>
+  </body>
+</html>
