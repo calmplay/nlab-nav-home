@@ -27,9 +27,7 @@ export function createDashboardHeader(): HTMLElement {
   right.innerHTML =
     '<span class="stat"><strong class="stat-num">10</strong> services</span>' +
     '<span class="stat-divider"></span>' +
-    '<span class="stat stat--ready"><strong class="stat-num">6</strong> ready</span>' +
-    '<span class="stat-divider"></span>' +
-    '<span class="stat stat--planned"><strong class="stat-num">4</strong> planned</span>';
+    '<span class="stat stat--ready"><strong class="stat-num">10</strong> available</span>';
   header.appendChild(right);
 
   return header;

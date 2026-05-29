@@ -32,7 +32,7 @@
 | Prometheus | P0 | 低 | **已接入** |
 | Grafana | P1 | 中 | **已接入** |
 | Router | P2 | 中 | **已降级为 /jump/** |
-| iLO | P3 | 高 | 待接入 |
+| iLO | P3 | 高 | **已降级为 /jump/** |
 
 ---
 
@@ -149,3 +149,37 @@
 | Clash | 旧网关依赖 cookie + WebSocket + API 动态路由，暂不迁移 |
 | Syncthing | 不支持子路径部署，WebSocket + 绝对路径资源 |
 | Router | /svc/router/ 浏览器白板，JS 报错 `Unexpected token '<'`，降级为 /jump/ |
+| iLO | HTTPS + WebSocket + 远程控制台，子路径反代风险极高，降级为 /jump/ |
+
+### Router 跳转优化
+
+- **日期**: 2026-05-29
+- **优化内容**: /jump/router/ 和 /svc/router/ fallback 目标优化为 `http://nuist.cfushn.com:50000/html/index.html#/home`
+- **效果**: 直接进入路由器 home 页面，跳过自动检测跳转
+
+### iLO（已降级为 /jump/）
+
+- **接入日期**: 2026-05-29
+- **最终方案**: /jump/ilo/ 302 → https://nuist.cfushn.com:50009/
+- **降级原因**:
+  - iLO 旧入口为 HTTPS 50009，涉及自签名 SSL 证书
+  - 远程控制台依赖 WebSocket，子路径下 URL 不可控
+  - 硬件设备页面 Host 校验严格，子路径反代极不稳定
+  - 稳定性优先，采用 /jump/ilo/ 302 跳转旧入口
+- **nginx**: /jump/ilo/ 和 /svc/ilo/ fallback 均 302 → https://nuist.cfushn.com:50009/
+- **注意事项**: 浏览器可能提示证书错误（自签名），点击"继续访问"即可
+
+---
+
+## 接入完成总结
+
+截至 2026-05-29，全部 10 个服务均已通过 1104 统一入口可访问：
+
+| 服务 | 接入方式 | 状态 |
+|------|---------|------|
+| Prometheus | /svc/prometheus/ 反代 | 已接入 |
+| Grafana | /svc/grafana/ 反代 | 已接入 |
+| Router | /jump/router/ 跳转 | 已降级 |
+| iLO | /jump/ilo/ 跳转 | 已降级 |
+| Clash | /jump/clash/ 跳转 | 保留旧入口 |
+| Syncthing ×5 | /jump/syncthing-*/ 跳转 | 保留旧入口 |

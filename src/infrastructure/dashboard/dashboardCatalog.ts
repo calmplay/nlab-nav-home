@@ -128,8 +128,8 @@ export const DASHBOARD_TILES: readonly DashboardTileConfig[] = [
       {
         title: "iLO",
         subtitle: "远程管理",
-        status: "planned",
-        href: "",
+        status: "jump",
+        href: "/jump/ilo/",
       },
     ],
   },
@@ -185,7 +185,7 @@ export const DASHBOARD_TILES: readonly DashboardTileConfig[] = [
       { name: "Prometheus 已接入", target: "/svc/prometheus/" },
       { name: "Grafana 已接入", target: "/svc/grafana/" },
       { name: "Router 已降级跳转", target: "/jump/router/" },
-      { name: "iLO", target: "/svc/ilo/" },
+      { name: "iLO 已降级跳转", target: "/jump/ilo/" },
     ],
   },
 ] as const;
