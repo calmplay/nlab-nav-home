@@ -30,7 +30,7 @@
 | 服务 | 优先级 | 难度 | 当前状态 |
 |------|--------|------|---------|
 | Prometheus | P0 | 低 | **已接入** |
-| Grafana | P1 | 中 | 待接入 |
+| Grafana | P1 | 中 | **已接入** |
 | Router | P2 | 中 | 待接入 |
 | iLO | P3 | 高 | 待接入 |
 
@@ -78,6 +78,49 @@
   docker compose up -d prometheus
   # 恢复 nginx（或直接删掉 /svc/prometheus/ location）
   cp /home/cy/backup/nlab-nav-prometheus-<TS>/nlab-nav.conf.bak .../nlab-nav.conf
+  docker exec nginx nginx -t && docker exec nginx nginx -s reload
+  ```
+
+### Grafana
+
+- **接入日期**: 2026-05-29
+- **接入方式**: /svc/grafana/ 反向代理
+- **是否需要修改服务配置**: 是
+- **修改内容**:
+  - docker-compose.yml 中 grafana environment 新增两个环境变量：
+    - `GF_SERVER_ROOT_URL: "http://nuist.cfushn.com:1104/svc/grafana/"`
+    - `GF_SERVER_SERVE_FROM_SUB_PATH: "true"`
+  - nlab-nav.conf 新增 location `/svc/grafana/` → `proxy_pass http://127.0.0.1:3000`（不带尾部斜杠，保留子路径）
+- **nginx location**:
+  ```nginx
+  location /svc/grafana/ {
+      proxy_pass http://127.0.0.1:3000;
+      proxy_http_version 1.1;
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header X-Forwarded-Host $host;
+      proxy_set_header X-Forwarded-Port 1104;
+      proxy_set_header X-Forwarded-Prefix /svc/grafana;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+      proxy_redirect off;
+  }
+  ```
+- **验证结果**:
+  - `curl http://nuist.cfushn.com:1104/svc/grafana/` → 302 → /svc/grafana/login
+  - `curl http://nuist.cfushn.com:1104/svc/grafana/login` → 200
+  - 旧 :3000 → 301 重定向到新 root_url（符合预期）
+  - Prometheus 和 1104 首页不受影响
+- **注意事项**:
+  - 使用 `127.0.0.1` 测试时 Grafana 因 Host 校验可能返回异常，必须用 `nuist.cfushn.com` 域名
+  - 具体 dashboard 快捷 URL 待后续配置后启用
+- **回滚方式**:
+  ```bash
+  cp /home/cy/backup/nlab-nav-grafana-<TS>/docker-compose.yml.bak /opt/monitoring/docker-compose.yml
+  docker compose up -d grafana
+  cp /home/cy/backup/nlab-nav-grafana-<TS>/nlab-nav.conf.bak .../nlab-nav.conf
   docker exec nginx nginx -t && docker exec nginx nginx -s reload
   ```
 
