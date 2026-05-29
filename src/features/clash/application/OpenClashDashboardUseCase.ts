@@ -82,6 +82,6 @@ export class OpenClashDashboardUseCase {
     );
     localStorage.setItem("externalControllerIndex", "0");
 
-    window.open("/clash/#/proxies", "_blank", "noopener,noreferrer");
+    window.location.assign("/clash/#/proxies");
   }
 }
