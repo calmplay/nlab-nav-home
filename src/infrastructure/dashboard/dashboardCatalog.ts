@@ -12,8 +12,11 @@ export interface DashboardAction {
   readonly hint?: string;
 }
 
+export type MachineButtonKind = "clash" | "syncthing";
+
 /** 机器按钮（用于 Clash / Syncthing 组） */
 export interface MachineButton {
+  readonly kind: MachineButtonKind;
   readonly label: string;
   readonly href: string;
   readonly hint?: string;
@@ -95,12 +98,12 @@ export const DASHBOARD_TILES: readonly DashboardTileConfig[] = [
     accent: "blue",
     status: "jump",
     machines: [
-      { label: "dx0", href: "", hint: "点击输入 secret 后直达 dx0 管理页" },
-      { label: "dx1", href: "", hint: "点击输入 secret 后直达 dx1 管理页" },
-      { label: "dx2", href: "", hint: "点击输入 secret 后直达 dx2 管理页" },
-      { label: "dx3", href: "", hint: "点击输入 secret 后直达 dx3 管理页" },
-      { label: "dx4", href: "", hint: "点击输入 secret 后直达 dx4 管理页" },
-      { label: "dx8", href: "", hint: "点击输入 secret 后直达 dx8 管理页" },
+      { kind: "clash", label: "dx0", href: "", hint: "点击输入 secret 后直达 dx0 管理页" },
+      { kind: "clash", label: "dx1", href: "", hint: "点击输入 secret 后直达 dx1 管理页" },
+      { kind: "clash", label: "dx2", href: "", hint: "点击输入 secret 后直达 dx2 管理页" },
+      { kind: "clash", label: "dx3", href: "", hint: "点击输入 secret 后直达 dx3 管理页" },
+      { kind: "clash", label: "dx4", href: "", hint: "点击输入 secret 后直达 dx4 管理页" },
+      { kind: "clash", label: "dx8", href: "", hint: "点击输入 secret 后直达 dx8 管理页" },
     ],
   },
 
@@ -159,11 +162,11 @@ export const DASHBOARD_TILES: readonly DashboardTileConfig[] = [
     accent: "green",
     status: "jump",
     machines: [
-      { label: "dx0", href: "/jump/syncthing-0/" },
-      { label: "dx1", href: "/jump/syncthing-1/" },
-      { label: "dx2", href: "/jump/syncthing-2/" },
-      { label: "dx3", href: "/jump/syncthing-3/" },
-      { label: "dx8", href: "/jump/syncthing-8/" },
+      { kind: "syncthing", label: "dx0", href: "/jump/syncthing-0/" },
+      { kind: "syncthing", label: "dx1", href: "/jump/syncthing-1/" },
+      { kind: "syncthing", label: "dx2", href: "/jump/syncthing-2/" },
+      { kind: "syncthing", label: "dx3", href: "/jump/syncthing-3/" },
+      { kind: "syncthing", label: "dx8", href: "/jump/syncthing-8/" },
     ],
   },
 

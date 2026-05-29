@@ -7,8 +7,9 @@ const clashUseCase = new OpenClashDashboardUseCase();
 /**
  * 机器按钮组。
  *
- * - Clash 机器（dx0~dx8）：onClick 触发密码弹窗 + 直达流程
- * - Syncthing 机器：href 新标签页打开
+ * - kind === "clash"     → OpenClashDashboardUseCase（externalControllers 机制）
+ * - kind === "syncthing" → href 新标签页打开
+ * - onClick              → 自定义回调
  */
 export function createMachineButtonGroup(
   machines: readonly MachineButton[],
@@ -24,17 +25,15 @@ export function createMachineButtonGroup(
 
     if (m.onClick) {
       btn.addEventListener("click", m.onClick);
-    } else if (m.href) {
-      // 有 href → 直接跳转（Syncthing 等）
-      btn.addEventListener("click", () => {
-        window.open(m.href, "_blank", "noopener,noreferrer");
-      });
-    } else {
-      // 无 href → Clash 机器直达流程
+    } else if (m.kind === "clash") {
       const machine = getMachineById(m.label);
       if (machine) {
         btn.addEventListener("click", () => clashUseCase.execute(machine));
       }
+    } else {
+      btn.addEventListener("click", () => {
+        window.open(m.href, "_blank", "noopener,noreferrer");
+      });
     }
 
     group.appendChild(btn);

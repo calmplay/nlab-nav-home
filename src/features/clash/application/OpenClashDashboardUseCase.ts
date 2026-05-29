@@ -3,24 +3,25 @@ import { BrowserClashSecretStore } from "../infrastructure/BrowserClashSecretSto
 import { createClashSecretModal } from "../presentation/ClashSecretModal";
 
 /**
- * 打开 Clash Dashboard。
- *
- * 稳定方案：通过旧 17900 Gateway 访问，不把 secret 放进 URL。
+ * 打开 Clash Dashboard（通过 External Controller 机制）。
  *
  * 流程：
  * 1. 从 localStorage 查找机器 secret
- * 2. 如有 secret → 设 cookie（供旧 Gateway 读取）→ 新标签页打开旧网关
- * 3. 如无 secret → 弹密码框 → 保存到 localStorage → 设 cookie → 打开旧网关
+ * 2. 如无 secret → 弹密码框
+ * 3. 写入 externalControllers / externalControllerIndex → SPA 自动连接
+ * 4. 设 clash_machine cookie → nginx 路由 API
+ * 5. 新标签页打开 /clash/#/proxies
  *
  * 安全：
- * - secret 只存 localStorage 和 cookie（SameSite=Lax），不进 URL
- * - 旧 Gateway 在 17900 端口处理 dashboard 渲染和 API 代理
+ * - secret 不进 URL，只存 localStorage
+ * - 不设 clash_secret cookie
+ * - 不打开 17900
  */
 export class OpenClashDashboardUseCase {
   execute(machine: ClashMachine): void {
     const saved = BrowserClashSecretStore.get(machine.id);
     if (saved) {
-      this.goToGateway(machine, saved);
+      this.openDashboard(machine, saved);
       return;
     }
 
@@ -29,7 +30,7 @@ export class OpenClashDashboardUseCase {
       (secret) => {
         BrowserClashSecretStore.set(machine.id, secret);
         modal.remove();
-        this.goToGateway(machine, secret);
+        this.openDashboard(machine, secret);
       },
       () => modal.remove(),
     );
@@ -37,16 +38,27 @@ export class OpenClashDashboardUseCase {
     document.body.appendChild(modal);
   }
 
-  private goToGateway(machine: ClashMachine, secret: string): void {
+  private openDashboard(machine: ClashMachine, secret: string): void {
+    // 设 cookie → nginx 根据 clash_machine 路由 API 到对应机器
     const machineNum = machine.id.replace("dx", "");
-    // 设 cookie 供旧 Gateway（17900端口）读取，SameSite=Lax 确保安全
     document.cookie = `clash_machine=${machineNum};path=/;max-age=86400;SameSite=Lax`;
-    document.cookie = `clash_secret=${encodeURIComponent(secret)};path=/;max-age=86400;SameSite=Lax`;
-    // 打开旧 Gateway，预选机器。secret 通过 cookie 传递，不进入 URL
-    window.open(
-      `http://nuist.cfushn.com:17900/?machine=${machineNum}`,
-      "_blank",
-      "noopener,noreferrer",
+
+    // 写入 External Controller 配置 → Clash SPA 自动连接
+    const proto = window.location.protocol;
+    const port = window.location.port || (proto === "https:" ? "443" : "80");
+    localStorage.setItem(
+      "externalControllers",
+      JSON.stringify([
+        {
+          hostname: window.location.hostname,
+          port,
+          secret,
+          protocol: proto,
+        },
+      ]),
     );
+    localStorage.setItem("externalControllerIndex", "0");
+
+    window.open("/clash/#/proxies", "_blank", "noopener,noreferrer");
   }
 }
