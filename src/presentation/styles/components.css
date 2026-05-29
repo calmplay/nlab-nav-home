@@ -186,18 +186,18 @@
 
 .machine-group {
   display: flex;
-  flex-wrap: nowrap;
   gap: 8px;
   align-items: center;
   width: 100%;
+  flex-wrap: nowrap;
 }
 
 .machine-btn {
   flex: 1 1 0;
   min-width: 0;
   max-width: 72px;
-  height: 36px;
-  padding: 0 6px;
+  height: 34px;
+  padding: 0 4px;
   font-size: 12px;
   font-weight: 600;
   border: 1px solid var(--gray-border);
@@ -211,6 +211,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .machine-btn:hover {
