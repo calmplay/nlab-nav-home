@@ -143,12 +143,12 @@ export const DASHBOARD_TILES: readonly DashboardTileConfig[] = [
     subtitle: "原始时序指标查询",
     variant: "tool",
     accent: "orange",
-    status: "planned",
+    status: "jump",
     primaryAction: {
-      label: "待接入",
-      href: "",
-      enabled: false,
-      hint: "待配置 --web.route-prefix 后通过 /svc/prometheus/ 接入",
+      label: "打开查询",
+      href: "/svc/prometheus/",
+      enabled: true,
+      hint: "通过 1104 统一入口访问，需 Basic Auth",
     },
   },
 
@@ -182,7 +182,7 @@ export const DASHBOARD_TILES: readonly DashboardTileConfig[] = [
     accent: "gray",
     status: "planned",
     planItems: [
-      { name: "Prometheus", target: "/svc/prometheus/" },
+      { name: "Prometheus 已接入", target: "/svc/prometheus/" },
       { name: "Grafana", target: "/svc/grafana/" },
       { name: "Router", target: "/svc/router/" },
       { name: "iLO", target: "/svc/ilo/" },
