@@ -10,6 +10,7 @@ export class ListServicesUseCase {
   constructor(private readonly repo: ServiceRepository) {}
 
   execute(): Service[] {
-    return this.repo.findAll();
+    const services = this.repo.findAll();
+    return [...services].sort((a, b) => a.priority - b.priority);
   }
 }

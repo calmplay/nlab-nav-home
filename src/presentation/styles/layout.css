@@ -1,43 +1,95 @@
 /* ══════════════════════════════════════════════════════════════
-   layout.css —— 页面布局
+   layout.css —— 一页 board 布局，不出现纵向滚动条
    ══════════════════════════════════════════════════════════════ */
 
-.app-container {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: var(--gap-lg) var(--gap-md);
+#app {
+  height: 100%;
 }
 
-/* 页头 */
+.app-shell {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-canvas-default);
+}
+
+.app-container {
+  max-width: 1120px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 18px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ── 顶部 ── */
 .app-header {
-  text-align: center;
-  margin-bottom: var(--gap-lg);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--color-border-default);
 }
 
 .app-header h1 {
-  font-size: 28px;
-  color: var(--color-text-accent);
-  margin-bottom: var(--gap-xs);
+  font-size: 18px;
+  font-weight: 600;
 }
 
 .app-header p {
-  font-size: 14px;
-  color: var(--color-text-muted);
-}
-
-/* 主体区域 */
-.app-main {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-lg);
-}
-
-/* 页脚 */
-.app-footer {
-  text-align: center;
-  margin-top: var(--gap-lg);
-  padding-top: var(--gap-md);
-  border-top: 1px solid var(--color-border);
   font-size: 12px;
-  color: var(--color-text-dim);
+  color: var(--color-fg-muted);
+}
+
+.header-stats {
+  font-size: 12px;
+  color: var(--color-fg-muted);
+  display: flex;
+  gap: 12px;
+}
+
+.header-stats strong {
+  color: var(--color-fg-default);
+}
+
+/* ── 统计条 ── */
+.board-summary {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--color-fg-muted);
+}
+
+.board-summary .summary-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.board-summary .summary-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* ── 服务板 ── */
+.service-board {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: minmax(110px, auto);
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
+  align-content: start;
+}
+
+/* 窄屏退化为 3 列 */
+@media (max-width: 1000px) {
+  .service-board {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
