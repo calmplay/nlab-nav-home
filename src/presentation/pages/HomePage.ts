@@ -11,7 +11,15 @@ export function renderHomePage(
   actions: Map<string, ResolvedAction>,
 ): void {
   const app = document.getElementById("app");
-  if (!app) return;
+  if (!app) {
+    console.error("Missing root element: #app. index.html 中缺少 <div id=\"app\"></div> 挂载点。");
+    const fallback = document.createElement("div");
+    fallback.style.cssText =
+      "max-width:600px;margin:60px auto;padding:24px;background:#24283b;color:#f7768e;border-radius:8px;font-family:system-ui";
+    fallback.textContent = "页面挂载失败：index.html 缺少 #app 根节点。请检查 index.html 是否包含 <div id=\"app\"></div>。";
+    document.body.prepend(fallback);
+    return;
+  }
 
   app.innerHTML = "";
 
