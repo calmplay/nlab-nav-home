@@ -31,7 +31,7 @@
 |------|--------|------|---------|
 | Prometheus | P0 | 低 | **已接入** |
 | Grafana | P1 | 中 | **已接入** |
-| Router | P2 | 中 | **测试中** |
+| Router | P2 | 中 | **已降级为 /jump/** |
 | iLO | P3 | 高 | 待接入 |
 
 ---
@@ -124,23 +124,21 @@
   docker exec nginx nginx -t && docker exec nginx nginx -s reload
   ```
 
-### Router（测试中，等待浏览器验证）
+### Router（已降级为 /jump/）
 
 - **接入尝试日期**: 2026-05-29
-- **接入方式**: /svc/router/ 反向代理（试接入）
-- **修改内容**: nlab-nav.conf 新增 location `/svc/router/` → `proxy_pass http://192.168.101.1/`，含 proxy_redirect 和 cookie_path
-- **nginx location**:
+- **最终方案**: /jump/router/ 302 → http://nuist.cfushn.com:50000/
+- **降级原因**:
+  - /svc/router/ curl GET 可返回路由器 HTML，但用户浏览器验证显示白板
+  - F12 Console 报错: `Uncaught SyntaxError: Unexpected token '<' at strToJson(router/:57:26)`
+  - 判断为路由器前端 JS 期望 JSON 却收到 HTML，由子路径下 API 路由不兼容导致
+  - 不尝试 sub_filter 或全局路径劫持等高风险修复
+- **当前 nginx 配置**:
   ```nginx
-  location /svc/router/ {
-      proxy_pass http://192.168.101.1/;
-      proxy_set_header Host 192.168.101.1;
-      proxy_redirect http://192.168.101.1/ /svc/router/;
-      proxy_redirect / /svc/router/;
-      proxy_cookie_path / /svc/router/;
-  }
+  location /svc/router/ { return 302 http://nuist.cfushn.com:50000/; }
+  location = /jump/router/ { return 302 http://nuist.cfushn.com:50000/; }
   ```
-- **curl 验证**: GET `/svc/router/` → 200，返回路由器 HTML（与旧 50000 端口内容一致）
-- **状态**: 等待用户浏览器验证 CSS/JS/登录是否正常。如异常则降级为 /jump/router/
+- **验证**: /jump/router/ → 302 ✅, /svc/router/ → 302 ✅（fallback 避免白板）
 
 ---
 
@@ -150,3 +148,4 @@
 |------|------|
 | Clash | 旧网关依赖 cookie + WebSocket + API 动态路由，暂不迁移 |
 | Syncthing | 不支持子路径部署，WebSocket + 绝对路径资源 |
+| Router | /svc/router/ 浏览器白板，JS 报错 `Unexpected token '<'`，降级为 /jump/ |

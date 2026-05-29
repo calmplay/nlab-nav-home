@@ -115,6 +115,15 @@ function buildStackBody(config: DashboardTileConfig): HTMLElement {
       const subTile = document.createElement("div");
       subTile.className = "sub-tile";
 
+      // 可点击子 tile
+      if (sub.href && sub.status !== "planned") {
+        subTile.classList.add("sub-tile--clickable");
+        subTile.title = "在新标签页打开 " + sub.subtitle;
+        subTile.addEventListener("click", () => {
+          window.open(sub.href, "_blank", "noopener,noreferrer");
+        });
+      }
+
       const info = document.createElement("div");
       info.className = "sub-tile-info";
 

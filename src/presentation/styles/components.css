@@ -226,6 +226,16 @@
   margin-top: 8px;
 }
 
+.sub-tile--clickable {
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.sub-tile--clickable:hover {
+  background: var(--blue-bg);
+  border-color: rgba(0, 122, 255, 0.25);
+}
+
 .sub-tile-info {
   display: flex;
   flex-direction: column;

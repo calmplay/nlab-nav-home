@@ -117,13 +117,13 @@ export const DASHBOARD_TILES: readonly DashboardTileConfig[] = [
     subtitle: "路由器管理 · iLO 远程控制",
     variant: "stack",
     accent: "gray",
-    status: "planned",
+    status: "jump",
     subTiles: [
       {
         title: "Router",
         subtitle: "路由器管理",
-        status: "planned",
-        href: "",
+        status: "jump",
+        href: "/jump/router/",
       },
       {
         title: "iLO",
@@ -184,7 +184,7 @@ export const DASHBOARD_TILES: readonly DashboardTileConfig[] = [
     planItems: [
       { name: "Prometheus 已接入", target: "/svc/prometheus/" },
       { name: "Grafana 已接入", target: "/svc/grafana/" },
-      { name: "Router", target: "/svc/router/" },
+      { name: "Router 已降级跳转", target: "/jump/router/" },
       { name: "iLO", target: "/svc/ilo/" },
     ],
   },
