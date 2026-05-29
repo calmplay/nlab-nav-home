@@ -47,6 +47,8 @@ export class ResolveServiceActionUseCase {
         return "new-tab";
       case "external-link":
         return "new-tab";
+      case "planned":
+        return "none";
       case "not-integrated":
         return "none";
       default:

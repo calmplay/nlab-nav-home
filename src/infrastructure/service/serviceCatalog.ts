@@ -9,6 +9,11 @@ import type { Service } from "../../domain/service/Service";
  * - 修改服务信息：直接编辑对应条目
  * - 删除服务：移除条目即可
  *
+ * 接入状态说明：
+ * - redirect:       已通过 /jump/<name>/ nginx 302 跳转接入
+ * - planned:        规划中，待第四阶段 /svc/ 反向代理验证后接入
+ * - not-integrated: 明确暂不接入
+ *
  * 安全提醒：此文件不包含 secret、token、密码，
  * 可以安全提交到 public GitHub 仓库。
  */
@@ -23,12 +28,12 @@ export const SERVICE_CATALOG: readonly Service[] = [
     description: "实验室主路由器 Web 管理界面，用于端口映射、DHCP、静态路由等配置",
     category: "network",
     priority: 1,
-    accessMode: "reverse-proxy",
-    href: "/svc/router/",
+    accessMode: "planned",
+    href: "",
     status: "online",
     risk: "medium",
     tags: ["路由器", "网络", "华为"],
-    notes: "已做 proxy_redirect，绝对路径资源可能仍需验证",
+    notes: "已通过 50000 端口提供 nginx 反代，待第四阶段接入 /svc/router/。需验证 proxy_redirect 兼容性",
   },
 
   // ═══════════════════════════════════════════════════════════
@@ -41,12 +46,12 @@ export const SERVICE_CATALOG: readonly Service[] = [
     description: "GPU 温度/功耗/使用率 + 节点 CPU/内存/磁盘监控",
     category: "monitoring",
     priority: 1,
-    accessMode: "reverse-proxy",
-    href: "/svc/grafana/",
+    accessMode: "planned",
+    href: "",
     status: "online",
     risk: "medium",
     tags: ["监控", "GPU", "Grafana"],
-    notes: "Grafana 支持 root_url 配置，将此值设为 /svc/grafana/ 即可正常工作",
+    notes: "运行在 dx0:3000 (Docker)。待第四阶段接入 /svc/grafana/，需配置 Grafana root_url",
   },
   {
     id: ServiceId("prometheus"),
@@ -55,12 +60,12 @@ export const SERVICE_CATALOG: readonly Service[] = [
     description: "直接查询原始时序指标，Grafana 面板的后端数据源",
     category: "monitoring",
     priority: 2,
-    accessMode: "reverse-proxy",
-    href: "/svc/prometheus/",
+    accessMode: "planned",
+    href: "",
     status: "online",
     risk: "medium",
     tags: ["监控", "时序库", "Prometheus"],
-    notes: "Prometheus 支持 --web.route-prefix=/svc/prometheus/ 参数",
+    notes: "运行在 dx0:9090 (Docker)。待第四阶段接入 /svc/prometheus/，需配置 --web.route-prefix",
   },
 
   // ═══════════════════════════════════════════════════════════
@@ -73,12 +78,12 @@ export const SERVICE_CATALOG: readonly Service[] = [
     description: "0 号机文件同步状态与配置",
     category: "sync",
     priority: 1,
-    accessMode: "legacy-entry",
-    href: "http://nuist.cfushn.com:50500/",
+    accessMode: "redirect",
+    href: "/jump/syncthing-0/",
     status: "online",
     risk: "high",
     tags: ["同步", "Syncthing", "dx0"],
-    notes: "Syncthing 不支持子路径部署，第一版保留原端口访问",
+    notes: "通过 /jump/ 跳转到原 50500 端口。Syncthing 不支持子路径，无法做 /svc/ 反代",
   },
   {
     id: ServiceId("syncthing-1"),
@@ -87,12 +92,12 @@ export const SERVICE_CATALOG: readonly Service[] = [
     description: "1 号机文件同步状态与配置",
     category: "sync",
     priority: 2,
-    accessMode: "legacy-entry",
-    href: "http://nuist.cfushn.com:50501/",
+    accessMode: "redirect",
+    href: "/jump/syncthing-1/",
     status: "online",
     risk: "high",
     tags: ["同步", "Syncthing", "dx1"],
-    notes: "Syncthing 不支持子路径部署，第一版保留原端口访问",
+    notes: "通过 /jump/ 跳转到原 50501 端口",
   },
   {
     id: ServiceId("syncthing-2"),
@@ -101,12 +106,12 @@ export const SERVICE_CATALOG: readonly Service[] = [
     description: "2 号机文件同步状态与配置",
     category: "sync",
     priority: 3,
-    accessMode: "legacy-entry",
-    href: "http://nuist.cfushn.com:50502/",
+    accessMode: "redirect",
+    href: "/jump/syncthing-2/",
     status: "online",
     risk: "high",
     tags: ["同步", "Syncthing", "dx2"],
-    notes: "Syncthing 不支持子路径部署，第一版保留原端口访问",
+    notes: "通过 /jump/ 跳转到原 50502 端口",
   },
   {
     id: ServiceId("syncthing-3"),
@@ -115,12 +120,12 @@ export const SERVICE_CATALOG: readonly Service[] = [
     description: "3 号机文件同步状态与配置",
     category: "sync",
     priority: 4,
-    accessMode: "legacy-entry",
-    href: "http://nuist.cfushn.com:50503/",
+    accessMode: "redirect",
+    href: "/jump/syncthing-3/",
     status: "online",
     risk: "high",
     tags: ["同步", "Syncthing", "dx3"],
-    notes: "Syncthing 不支持子路径部署，第一版保留原端口访问",
+    notes: "通过 /jump/ 跳转到原 50503 端口",
   },
   {
     id: ServiceId("syncthing-8"),
@@ -129,12 +134,12 @@ export const SERVICE_CATALOG: readonly Service[] = [
     description: "8 号机文件同步状态与配置",
     category: "sync",
     priority: 5,
-    accessMode: "legacy-entry",
-    href: "http://nuist.cfushn.com:50508/",
+    accessMode: "redirect",
+    href: "/jump/syncthing-8/",
     status: "online",
     risk: "high",
     tags: ["同步", "Syncthing", "dx8"],
-    notes: "Syncthing 不支持子路径部署，第一版保留原端口访问",
+    notes: "通过 /jump/ 跳转到原 50508 端口",
   },
 
   // ═══════════════════════════════════════════════════════════
@@ -147,12 +152,12 @@ export const SERVICE_CATALOG: readonly Service[] = [
     description: "dx8 HPE 服务器硬件级远程管理：电源控制、虚拟控制台、故障日志",
     category: "remote-management",
     priority: 1,
-    accessMode: "reverse-proxy",
-    href: "/svc/ilo/",
+    accessMode: "planned",
+    href: "",
     status: "online",
     risk: "high",
     tags: ["iLO", "HPE", "硬件", "远程控制台"],
-    notes: "SSL + WebSocket，远程控制台需验证子路径兼容性",
+    notes: "已通过 50009 端口提供 SSL 反代。待第四阶段验证 /svc/ilo/ 的 SSL + WebSocket 兼容性",
   },
 
   // ═══════════════════════════════════════════════════════════
@@ -165,11 +170,11 @@ export const SERVICE_CATALOG: readonly Service[] = [
     description: "多服务器 Clash 代理 Dashboard：切换机器、查看代理规则与连接",
     category: "proxy",
     priority: 1,
-    accessMode: "legacy-entry",
-    href: "http://nuist.cfushn.com:17900/",
+    accessMode: "redirect",
+    href: "/jump/clash/",
     status: "online",
     risk: "medium",
     tags: ["Clash", "代理", "Dashboard"],
-    notes: "旧网关依赖 cookie + WebSocket + API 动态路由，第一版保留跳转",
+    notes: "通过 /jump/clash/ nginx 302 跳转到旧 17900 网关。后续评估迁移到新导航页",
   },
 ];

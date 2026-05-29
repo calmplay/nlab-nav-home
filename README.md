@@ -85,19 +85,97 @@ npm run dev
 # 类型检查 + 生产构建
 npm run build
 
-# 预览生产构建
-npm run preview
+# 本地检查（仅检查，不同步到服务器）
+npm run check
+
+# 预览生产构建（在浏览器查看 dist/ 的效果）
+npm run preview:local
+```
+
+## 本地开发与同步部署
+
+### 部署架构
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  MacBook（本地开发）                                         │
+│  ~/nlab/nlab-nav-home/                                      │
+│  ├── src/           ← 源码（TypeScript / CSS）               │
+│  ├── dist/          ← 构建产物（npm run build 生成）          │
+│  └── scripts/                                              │
+│       └── deploy-static.sh  ← rsync dist/ → 0号机           │
+└──────────────────────────┬──────────────────────────────────┘
+                           │ rsync (仅 dist/)
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│  0 号机（只放构建产物，不开发）                                │
+│  /home/cy/docker_vol/nginx/html/lab-nav/                    │
+│  ├── index.html                                             │
+│  └── assets/                                                │
+│       ├── index-XXXXXXXX.js                                 │
+│       └── index-XXXXXXXX.css                                │
+└──────────────────────────┬──────────────────────────────────┘
+                           │ nginx 读取
+                           ▼
+               http://nuist.cfushn.com:1104/
+```
+
+### 为什么不在服务器上开发前端
+
+1. **源码单一来源**：所有 TypeScript / CSS 源码在 MacBook，Git 跟踪完整历史。
+2. **服务器职责单一**：0 号机只运行 Docker 服务 + nginx 静态文件，不需要 Node.js 开发环境。
+3. **回滚简单**：`dist/` 是构建产物，出问题只需重新 `npm run build` + `deploy:static`。
+4. **安全和干净**：服务器上不残留 `node_modules/`、`src/`、`.git/` 等开发文件。
+
+### 标准开发流程
+
+```bash
+# 1. 修改源码（src/ 下的 TypeScript / CSS）
+# 2. 本地开发预览（热更新，修改即时可见）
+npm run dev
+
+# 3. 浏览器验证通过后，构建 + 同步到 0 号机
+npm run deploy:static
+
+# 4. 浏览器访问验证
+# http://nuist.cfushn.com:1104/
+```
+
+### dist/ 和 src/ 的区别
+
+| | `src/` | `dist/` |
+|---|---|---|
+| 是什么 | TypeScript 源码 + CSS 源文件 | 编译后的 JS + 压缩的 CSS + HTML |
+| 谁读 | 开发者 + TypeScript 编译器 | nginx + 浏览器 |
+| 在 GitHub | ✓ 提交 | ✗ .gitignore 排除 |
+| 在服务器 | ✗ 不存在 | ✓ 唯一需要的东西 |
+| 修改方式 | 编辑 `.ts` / `.css` | 不直接修改，由 `npm run build` 重新生成 |
+
+### 回滚方式
+
+```bash
+# 如果部署后发现问题：
+# 1. git checkout 到上一个正常版本
+git checkout <last-good-commit>
+
+# 2. 重新构建 + 部署
+npm run deploy:static
+
+# 3. 或手动回滚 nginx 配置
+ssh -p 11040 cy@nuist.cfushn.com
+mv /home/cy/docker_vol/nginx/conf/conf.d/nlab-nav.conf \
+   /home/cy/docker_vol/nginx/conf/conf.d/nlab-nav.conf.bak
+docker exec nginx nginx -t && docker exec nginx nginx -s reload
 ```
 
 ## 部署
 
 ```bash
-# 构建
-npm run build
-
-# 产物在 dist/ 目录，复制到 nginx 静态目录即可
-# scp -r dist/* <server>:/home/cy/docker_vol/nginx/html/lab-nav/
+# 一键部署：构建 + 同步 dist/ 到 0 号机
+npm run deploy:static
 ```
+
+产物在 `dist/` 目录，通过 rsync 同步到 0 号机的 `/home/cy/docker_vol/nginx/html/lab-nav/`。
 
 ## 安全
 
