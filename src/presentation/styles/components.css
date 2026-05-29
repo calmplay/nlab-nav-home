@@ -390,14 +390,8 @@
   color: var(--text-primary);
 }
 
-.clash-modal-input-row {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
 .clash-modal-input {
-  flex: 1;
+  width: 100%;
   padding: 10px 14px;
   font-size: 14px;
   border: 1px solid var(--gray-border);
@@ -409,20 +403,6 @@
 .clash-modal-input:focus {
   border-color: var(--blue);
   box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.12);
-}
-
-.clash-modal-eye {
-  width: 40px;
-  height: 40px;
-  border: none;
-  background: var(--gray-bg);
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
 }
 
 .clash-modal-btns {

@@ -1,7 +1,7 @@
 /**
  * Clash Secret 密码悬浮框。
  * - 标题: "<machine> clash"
- * - 密码输入框 + 眼睛切换
+ * - 密码输入框（浏览器内置眼睛，不额外加自定义按钮）
  * - 进入 / 取消两个按钮
  * - Esc 关闭、点击遮罩关闭
  */
@@ -10,11 +10,9 @@ export function createClashSecretModal(
   onEnter: (secret: string) => void,
   onCancel: () => void,
 ): HTMLElement {
-  // 遮罩
   const overlay = document.createElement("div");
   overlay.className = "clash-modal-overlay";
 
-  // 弹窗
   const box = document.createElement("div");
   box.className = "clash-modal-box";
 
@@ -23,28 +21,12 @@ export function createClashSecretModal(
   title.textContent = `${machineLabel} clash`;
   box.appendChild(title);
 
-  // 输入行
-  const inputRow = document.createElement("div");
-  inputRow.className = "clash-modal-input-row";
-
   const input = document.createElement("input");
   input.type = "password";
   input.placeholder = "Clash API secret";
   input.className = "clash-modal-input";
-  inputRow.appendChild(input);
+  box.appendChild(input);
 
-  const eye = document.createElement("button");
-  eye.type = "button";
-  eye.className = "clash-modal-eye";
-  eye.textContent = "👁";
-  eye.title = "显示/隐藏";
-  eye.addEventListener("click", () => {
-    input.type = input.type === "password" ? "text" : "password";
-  });
-  inputRow.appendChild(eye);
-  box.appendChild(inputRow);
-
-  // 按钮行
   const btnRow = document.createElement("div");
   btnRow.className = "clash-modal-btns";
 
@@ -70,7 +52,6 @@ export function createClashSecretModal(
 
   overlay.appendChild(box);
 
-  // 关闭方式
   overlay.addEventListener("click", (e) => {
     if (e.target === overlay) onCancel();
   });
@@ -81,7 +62,6 @@ export function createClashSecretModal(
     }
   });
 
-  // 自动聚焦
   setTimeout(() => input.focus(), 100);
 
   return overlay;

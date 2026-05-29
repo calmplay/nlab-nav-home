@@ -146,10 +146,21 @@
 
 | 服务 | 原因 |
 |------|------|
-| Clash | **已迁移到 TS 项目**：直达入口 + 密码模态框 + 本地 secret 存储 |
+| Clash | 通过旧 17900 Gateway 访问，secret 不进 URL，前端弹窗保存 secret 到 localStorage |
 | Syncthing | 不支持子路径部署，WebSocket + 绝对路径资源 |
 | Router | /svc/router/ 浏览器白板，JS 报错 `Unexpected token '<'`，降级为 /jump/ |
 | iLO | HTTPS + WebSocket + 远程控制台，子路径反代风险极高，降级为 /jump/ |
+
+### Clash 安全修复（2026-05-29）
+
+- **问题**: 上一版将 secret 拼入 URL hash，且直接请求公网 17800 端口，导致 ERR_EMPTY_RESPONSE
+- **修复**:
+  - 删除 secret 进 URL 的所有逻辑
+  - 机器按钮改为打开旧 17900 Gateway（`http://nuist.cfushn.com:17900/?machine=X`）
+  - secret 通过 cookie（SameSite=Lax）传递给旧 Gateway，不进入 URL
+  - 前端 modal 保留：输入 secret → 存 localStorage + 设 cookie → 打开旧网关
+  - 旧 Gateway 的 dashboard SPA 和 API proxy 已验证可用
+- **当前状态**: 稳定，secret 不进 URL，不直接访问 17800
 
 ### Router 跳转优化
 

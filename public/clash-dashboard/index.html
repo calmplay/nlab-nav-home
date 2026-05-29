@@ -21,13 +21,9 @@
     </div>
     <script>
       (function(){
-        var portMap={0:17800,1:17801,2:17802,3:17803,4:17804,8:17808};
+        var c=document.cookie.match(/clash_machine=(\d+)/);
         var p=new URLSearchParams(location.search);
-        var cm=document.cookie.match(/clash_machine=(\d+)/);
-        var cs=document.cookie.match(/clash_secret=([^;]+)/);
-        // 从 URL ?machine=dx0 或 cookie 读取机器编号
-        var raw=p.get('machine')||'';
-        var m=(cm?cm[1]:null)||raw.replace('dx','')||null;
+        var m=p.get('machine')||(c?c[1]:null);
         if(m){document.cookie='clash_machine='+m+';path=/;max-age=86400;SameSite=Lax'}
         document.getElementById('machine-label').textContent=m?'dx'+m+' 号机':'未选择';
         document.getElementById('reset-btn').onclick=function(){
@@ -35,12 +31,6 @@
           for(var k in localStorage){if(k.startsWith('nlab.clash.secret.'))localStorage.removeItem(k)}
           location.href='http://nuist.cfushn.com:1104/';
         };
-        // 如果有 secret + machine → 自动跳转到 SPA 管理页
-        var secret=cs?decodeURIComponent(cs[1]):null;
-        if(m&&secret&&portMap[m]&&!location.hash){
-          var safe=secret.replace(/%/g,'%25').replace(/#/g,'%23').replace(/&/g,'%26').replace(/=/g,'%3D');
-          location.replace('#/proxies?host='+location.hostname+'&port='+portMap[m]+'&secret='+safe);
-        }
       })();
     </script>
   </body>
