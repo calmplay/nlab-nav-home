@@ -186,12 +186,18 @@
 
 .machine-group {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 8px;
+  align-items: center;
+  width: 100%;
 }
 
 .machine-btn {
-  padding: 6px 14px;
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 72px;
+  height: 36px;
+  padding: 0 6px;
   font-size: 12px;
   font-weight: 600;
   border: 1px solid var(--gray-border);
@@ -201,6 +207,10 @@
   cursor: pointer;
   transition: all 0.15s ease;
   box-shadow: var(--shadow-sm);
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .machine-btn:hover {
@@ -208,6 +218,16 @@
   border-color: rgba(0, 122, 255, 0.25);
   color: var(--blue);
   transform: translateY(-1px);
+}
+
+@media (max-width: 900px) {
+  .machine-group {
+    flex-wrap: wrap;
+  }
+  .machine-btn {
+    flex: 0 0 auto;
+    max-width: none;
+  }
 }
 
 /* ═══════════════════ Stack (Remote) ═══════════════════ */
