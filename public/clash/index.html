@@ -17,20 +17,43 @@
     <div style="position:fixed;bottom:132px;left:35px;z-index:2147483647;display:flex;flex-direction:column;gap:6px;text-align:center">
       <span id="machine-label" style="padding:6px 16px;background:rgba(69,131,216,0.15);color:#4583D8;border:1px solid #4583D8;border-radius:6px;font-size:13px">加载中</span>
       <button id="back-home" style="padding:6px 16px;background:#4583D8;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px">返回主页</button>
-      <button id="reset-btn" style="padding:6px 16px;background:#4583D8;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px">重置</button>
+      <button id="reset-btn" title="仅清除当前机器保存的 Clash secret，不影响其他机器" style="padding:6px 16px;background:#4583D8;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px">重置当前</button>
     </div>
     <script>
       (function(){
         var c=document.cookie.match(/clash_machine=(\d+)/);
-        document.getElementById('machine-label').textContent=c?'dx'+c[1]+' 号机':'未选择';
-        document.getElementById('back-home').onclick=function(){location.href='/';};
-        document.getElementById('reset-btn').onclick=function(){
-          document.cookie='clash_machine=;path=/;max-age=0';
-          for(var k in localStorage){
-            if(k.startsWith('nlab.clash.secret.')||k==='externalControllers'||k==='externalControllerIndex')localStorage.removeItem(k)
-          }
-          location.href='/';
+        var curMachine = c ? c[1] : null;
+        document.getElementById('machine-label').textContent = curMachine ? 'dx'+curMachine+' 号机' : '未选择';
+
+        document.getElementById('back-home').onclick = function(){
+          location.href = '/';
         };
+
+        // 只重置当前机器，不误伤其他机器
+        document.getElementById('reset-btn').onclick = function(){
+          document.cookie = 'clash_machine=;path=/;max-age=0;SameSite=Lax';
+          if (curMachine) {
+            localStorage.removeItem('nlab.clash.secret.dx' + curMachine);
+          }
+          localStorage.removeItem('externalControllers');
+          localStorage.removeItem('externalControllerIndex');
+          location.href = '/';
+        };
+
+        // logo fallback：隐藏破图，插入文字
+        function fixBrokenLogo() {
+          var imgs = document.querySelectorAll('img');
+          for (var i = 0; i < imgs.length; i++) {
+            var img = imgs[i];
+            if (img.complete && img.naturalWidth === 0 && img.naturalHeight === 0) {
+              var fallback = document.createElement('span');
+              fallback.textContent = 'NLab Clash';
+              fallback.style.cssText = 'font-size:18px;font-weight:700;color:#4583D8;padding:4px 8px';
+              img.replaceWith(fallback);
+            }
+          }
+        }
+        window.addEventListener('load', function(){ fixBrokenLogo(); setTimeout(fixBrokenLogo, 600); setTimeout(fixBrokenLogo, 1800); });
       })();
     </script>
   </body>

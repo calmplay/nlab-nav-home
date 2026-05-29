@@ -408,6 +408,19 @@
   box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.12);
 }
 
+.clash-modal-error {
+  display: none;
+  font-size: 12px;
+  color: #cf222e;
+  margin-top: 4px;
+}
+
+.clash-modal-input:disabled,
+.clash-modal-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 .clash-modal-btns {
   display: flex;
   gap: 10px;

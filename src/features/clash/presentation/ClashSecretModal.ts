@@ -1,15 +1,24 @@
 /**
  * Clash Secret 密码悬浮框。
+ *
  * - 标题: "<machine> clash"
- * - 密码输入框（浏览器内置眼睛，不额外加自定义按钮）
- * - 进入 / 取消两个按钮
- * - Esc 关闭、点击遮罩关闭
+ * - 密码输入框 + 错误提示
+ * - "进入" 按钮（验证中显示 loading）、"取消" 按钮
+ * - Enter 提交、Esc 关闭、点击遮罩关闭
+ * - 错误信息不包含密码原文
  */
+export interface ClashSecretModalHandle {
+  showError(msg: string): void;
+  setLoading(loading: boolean): void;
+  remove(): void;
+}
+
 export function createClashSecretModal(
   machineLabel: string,
-  onEnter: (secret: string) => void,
+  onEnter: (secret: string) => Promise<void>,
   onCancel: () => void,
-): HTMLElement {
+  initialError?: string,
+): ClashSecretModalHandle {
   const overlay = document.createElement("div");
   overlay.className = "clash-modal-overlay";
 
@@ -27,6 +36,14 @@ export function createClashSecretModal(
   input.className = "clash-modal-input";
   box.appendChild(input);
 
+  const errorEl = document.createElement("p");
+  errorEl.className = "clash-modal-error";
+  if (initialError) {
+    errorEl.textContent = initialError;
+    errorEl.style.display = "block";
+  }
+  box.appendChild(errorEl);
+
   const btnRow = document.createElement("div");
   btnRow.className = "clash-modal-btns";
 
@@ -39,30 +56,67 @@ export function createClashSecretModal(
   const enterBtn = document.createElement("button");
   enterBtn.className = "clash-modal-btn clash-modal-btn--enter";
   enterBtn.textContent = "进入";
-  enterBtn.addEventListener("click", () => {
+
+  let loading = false;
+  const submit = async () => {
+    if (loading) return;
     const s = input.value.trim();
     if (!s) {
+      errorEl.textContent = "请输入 secret";
+      errorEl.style.display = "block";
       input.style.borderColor = "#cf222e";
       return;
     }
-    onEnter(s);
-  });
+    errorEl.style.display = "none";
+    input.style.borderColor = "";
+    setLoading(true);
+    await onEnter(s);
+  };
+
+  enterBtn.addEventListener("click", submit);
   btnRow.appendChild(enterBtn);
   box.appendChild(btnRow);
 
   overlay.appendChild(box);
 
+  // 关闭
+  const close = () => {
+    if (!loading) onCancel();
+  };
   overlay.addEventListener("click", (e) => {
-    if (e.target === overlay) onCancel();
+    if (e.target === overlay) close();
   });
-  document.addEventListener("keydown", function escHandler(e) {
+  const escHandler = (e: KeyboardEvent) => {
     if (e.key === "Escape") {
-      onCancel();
+      close();
       document.removeEventListener("keydown", escHandler);
     }
+  };
+  document.addEventListener("keydown", escHandler);
+
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") submit();
   });
 
+  document.body.appendChild(overlay);
   setTimeout(() => input.focus(), 100);
 
-  return overlay;
+  function setLoading(v: boolean): void {
+    loading = v;
+    enterBtn.disabled = v;
+    enterBtn.textContent = v ? "验证中..." : "进入";
+    input.disabled = v;
+  }
+
+  return {
+    showError(msg: string) {
+      errorEl.textContent = msg;
+      errorEl.style.display = "block";
+    },
+    setLoading,
+    remove() {
+      overlay.remove();
+      document.removeEventListener("keydown", escHandler);
+    },
+  };
 }

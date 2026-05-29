@@ -1,49 +1,72 @@
 import type { ClashMachine } from "../domain/ClashMachine";
 import { BrowserClashSecretStore } from "../infrastructure/BrowserClashSecretStore";
 import { createClashSecretModal } from "../presentation/ClashSecretModal";
+import { ValidateClashSecretUseCase } from "./ValidateClashSecretUseCase";
+
+const validator = new ValidateClashSecretUseCase();
 
 /**
- * 打开 Clash Dashboard（通过 External Controller 机制）。
+ * 打开 Clash Dashboard（含 secret 预检验证）。
  *
  * 流程：
- * 1. 从 localStorage 查找机器 secret
- * 2. 如无 secret → 弹密码框
- * 3. 写入 externalControllers / externalControllerIndex → SPA 自动连接
- * 4. 设 clash_machine cookie → nginx 路由 API
- * 5. 新标签页打开 /clash/#/proxies
- *
- * 安全：
- * - secret 不进 URL，只存 localStorage
- * - 不设 clash_secret cookie
- * - 不打开 17900
+ * 1. localStorage 有已存 secret → 先验证有效性
+ * 2. 有效 → 设 externalControllers → 打开 /clash/#/proxies
+ * 3. 失效 → 清除旧 secret → 弹 modal
+ * 4. modal 输入 → 验证 → 通过才保存并打开
  */
 export class OpenClashDashboardUseCase {
-  execute(machine: ClashMachine): void {
+  async execute(machine: ClashMachine): Promise<void> {
     const saved = BrowserClashSecretStore.get(machine.id);
     if (saved) {
-      this.openDashboard(machine, saved);
+      const result = await validator.execute(machine, saved);
+      if (result.kind === "ok") {
+        this.openDashboard(machine, saved);
+        return;
+      }
+      // 旧 secret 失效，清除后弹 modal
+      BrowserClashSecretStore.remove(machine.id);
+      if (result.kind === "unauthorized") {
+        this.showModal(
+          machine,
+          "已保存的 secret 已失效，请重新输入",
+        );
+      } else {
+        this.showModal(machine, result.message);
+      }
       return;
     }
 
+    this.showModal(machine);
+  }
+
+  private showModal(machine: ClashMachine, error?: string): void {
     const modal = createClashSecretModal(
       machine.label,
-      (secret) => {
-        BrowserClashSecretStore.set(machine.id, secret);
-        modal.remove();
-        this.openDashboard(machine, secret);
+      async (secret) => {
+        modal.setLoading(true);
+        const result = await validator.execute(machine, secret);
+        if (result.kind === "ok") {
+          BrowserClashSecretStore.set(machine.id, secret);
+          modal.remove();
+          this.openDashboard(machine, secret);
+        } else if (result.kind === "unauthorized") {
+          modal.showError("secret 无效，请检查后重试");
+          modal.setLoading(false);
+        } else {
+          modal.showError(result.message);
+          modal.setLoading(false);
+        }
       },
       () => modal.remove(),
+      error,
     );
 
-    document.body.appendChild(modal);
   }
 
   private openDashboard(machine: ClashMachine, secret: string): void {
-    // 设 cookie → nginx 根据 clash_machine 路由 API 到对应机器
     const machineNum = machine.id.replace("dx", "");
     document.cookie = `clash_machine=${machineNum};path=/;max-age=86400;SameSite=Lax`;
 
-    // 写入 External Controller 配置 → Clash SPA 自动连接
     const proto = window.location.protocol;
     const port = window.location.port || (proto === "https:" ? "443" : "80");
     localStorage.setItem(
