@@ -1,0 +1,186 @@
+/* ══════════════════════════════════════════════════════════════
+   components.css —— 卡片、标签、按钮、分组
+   ══════════════════════════════════════════════════════════════ */
+
+/* —— 分类分组 —— */
+.service-section {
+  margin-bottom: var(--gap-sm);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  padding-bottom: var(--gap-xs);
+  margin-bottom: var(--gap-sm);
+  border-bottom: 2px solid var(--color-primary);
+}
+
+.section-header h2 {
+  font-size: 16px;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.section-count {
+  font-size: 12px;
+  color: var(--color-text-dim);
+  background: var(--color-bg-card);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+/* —— 服务卡片网格 —— */
+.service-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--gap-sm);
+}
+
+/* —— 服务卡片 —— */
+.service-card {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--gap-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  transition: background 0.15s, transform 0.15s;
+}
+
+.service-card:hover {
+  background: var(--color-bg-hover);
+  transform: translateY(-1px);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-xs);
+}
+
+.card-header h3 {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.card-desc {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  flex: 1;
+}
+
+/* —— 标签 —— */
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+}
+
+.tag {
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: var(--color-bg);
+  color: var(--color-text-dim);
+  border: 1px solid var(--color-border);
+}
+
+.tag-risk-low {
+  border-color: var(--color-risk-low);
+  color: var(--color-risk-low);
+}
+
+.tag-risk-medium {
+  border-color: var(--color-risk-medium);
+  color: var(--color-risk-medium);
+}
+
+.tag-risk-high {
+  border-color: var(--color-risk-high);
+  color: var(--color-risk-high);
+}
+
+.tag-risk-unknown {
+  border-color: var(--color-risk-unknown);
+  color: var(--color-risk-unknown);
+}
+
+/* —— 状态标签 —— */
+.status-badge {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status-badge.online {
+  background: var(--color-online);
+}
+
+.status-badge.degraded {
+  background: var(--color-degraded);
+}
+
+.status-badge.unknown {
+  background: var(--color-unknown);
+}
+
+/* —— 卡片底部操作行 —— */
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: var(--gap-xs);
+}
+
+.card-risk {
+  font-size: 12px;
+  color: var(--color-text-dim);
+}
+
+.card-action {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--color-primary);
+  color: #fff;
+  transition: background 0.15s;
+}
+
+.card-action:hover {
+  background: var(--color-primary-hover);
+}
+
+.card-action:disabled {
+  background: var(--color-border);
+  color: var(--color-text-dim);
+  cursor: not-allowed;
+}
+
+.card-action--new-tab {
+  background: transparent;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+}
+
+.card-action--new-tab:hover {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+/* —— 备注提示 —— */
+.card-notes {
+  font-size: 11px;
+  color: var(--color-text-dim);
+  font-style: italic;
+  border-left: 2px solid var(--color-border);
+  padding-left: var(--gap-xs);
+}
