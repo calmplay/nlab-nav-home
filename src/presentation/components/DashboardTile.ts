@@ -79,11 +79,6 @@ function buildHeroBody(config: DashboardTileConfig): HTMLElement {
     body.appendChild(primary);
   }
 
-  // 装饰圆环
-  const ring = document.createElement("div");
-  ring.className = "tile-deco-ring";
-  body.appendChild(ring);
-
   return body;
 }
 

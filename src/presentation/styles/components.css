@@ -163,26 +163,6 @@
   gap: 8px;
 }
 
-.tile-deco-ring {
-  position: absolute;
-  right: 8px;
-  top: 8px;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: 3px solid rgba(0, 122, 255, 0.18);
-  background: transparent;
-  pointer-events: none;
-}
-
-.tile-deco-ring::after {
-  content: "";
-  position: absolute;
-  inset: 4px;
-  border-radius: 50%;
-  border: 2px solid rgba(0, 122, 255, 0.12);
-}
-
 /* ═══════════════════ Group (Clash / Syncthing) ═══════════════════ */
 .tile--group.tile--green {
   background: linear-gradient(135deg, rgba(255,255,255,0.92) 0%, var(--green-bg) 100%);
