@@ -24,16 +24,16 @@ export function createMachineButtonGroup(
 
     if (m.onClick) {
       btn.addEventListener("click", m.onClick);
+    } else if (m.href) {
+      // 有 href → 直接跳转（Syncthing 等）
+      btn.addEventListener("click", () => {
+        window.open(m.href, "_blank", "noopener,noreferrer");
+      });
     } else {
-      // Clash 机器 → 直达流程
+      // 无 href → Clash 机器直达流程
       const machine = getMachineById(m.label);
       if (machine) {
         btn.addEventListener("click", () => clashUseCase.execute(machine));
-      } else {
-        // Syncthing → href 跳转
-        btn.addEventListener("click", () => {
-          window.open(m.href, "_blank", "noopener,noreferrer");
-        });
       }
     }
 
