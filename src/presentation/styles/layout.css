@@ -17,7 +17,7 @@
 }
 
 .dashboard-container {
-  width: min(1180px, calc(100vw - 96px));
+  width: min(1320px, calc(100vw - 96px));
   height: calc(100vh - 64px);
   margin: 32px auto;
   display: grid;
@@ -25,17 +25,24 @@
   gap: 18px;
 }
 
-/* ── 12 列 × 3 行 Bento 网格 ── */
+/* ── 14 列 × 3 行 Bento 网格 ── */
 .dashboard-board {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: repeat(3, minmax(130px, 1fr));
+  grid-template-columns: repeat(14, minmax(0, 1fr));
+  grid-template-rows: minmax(230px, 1fr) minmax(230px, 1fr) minmax(165px, 0.72fr);
   gap: 16px;
   min-height: 0;
 }
 
+/* tile 通用保护：防止内容溢出 */
+.tile {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
 /* ── 响应式 ── */
-@media (max-width: 1000px) {
+@media (max-width: 1100px) {
   body {
     overflow: auto;
   }
@@ -48,11 +55,11 @@
 
   .dashboard-container {
     height: auto;
-    width: min(100% - 32px, 720px);
+    width: min(100% - 32px, 760px);
   }
 
   .dashboard-board {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: auto;
   }
 

@@ -1,14 +1,14 @@
 import { DASHBOARD_TILES } from "../../infrastructure/dashboard/dashboardCatalog";
 import { createDashboardTile } from "./DashboardTile";
 
-/** 6 个 tile 的 CSS Grid 位置映射 */
+/** 6 个 tile 的 CSS Grid 位置映射（14 列） */
 const TILE_POSITIONS: Record<string, string> = {
-  grafana:    "grid-column: 1 / 7; grid-row: 1 / 3;",
-  clash:      "grid-column: 7 / 11; grid-row: 1 / 2;",
-  remote:     "grid-column: 11 / 13; grid-row: 1 / 3;",
-  prometheus: "grid-column: 7 / 11; grid-row: 2 / 3;",
-  syncthing:  "grid-column: 1 / 7; grid-row: 3 / 4;",
-  plan:       "grid-column: 7 / 13; grid-row: 3 / 4;",
+  grafana:    "grid-column: 1 / 8; grid-row: 1 / 3;",
+  clash:      "grid-column: 8 / 12; grid-row: 1 / 2;",
+  prometheus: "grid-column: 8 / 12; grid-row: 2 / 3;",
+  remote:     "grid-column: 12 / 15; grid-row: 1 / 3;",
+  syncthing:  "grid-column: 1 / 8; grid-row: 3 / 4;",
+  plan:       "grid-column: 8 / 15; grid-row: 3 / 4;",
 };
 
 /**

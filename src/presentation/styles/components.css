@@ -104,6 +104,10 @@
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: -0.2px;
+  word-break: keep-all;
+  overflow-wrap: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tile-subtitle {
@@ -234,15 +238,23 @@
 }
 
 /* ═══════════════════ Stack (Remote) ═══════════════════ */
+.tile--stack .tile-body {
+  flex: 1;
+  min-height: 0;
+}
+
 .sub-tile {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 14px;
+  padding: 10px 12px;
   background: var(--white);
   border: 1px solid var(--gray-border);
   border-radius: var(--radius-sm);
-  gap: 10px;
+  gap: 8px;
+  min-width: 0;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .sub-tile + .sub-tile {
@@ -285,19 +297,29 @@
 }
 
 /* ═══════════════════ Plan ═══════════════════ */
+.tile--plan .tile-body {
+  overflow: hidden;
+  flex: 1;
+  min-height: 0;
+}
+
 .plan-list {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 2px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .plan-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 0;
+  padding: 4px 0;
   border-bottom: 1px solid var(--gray-border);
+  flex-shrink: 0;
 }
 
 .plan-item:last-child {
