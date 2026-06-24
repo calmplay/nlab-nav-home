@@ -93,7 +93,12 @@ export const DASHBOARD_TILES: readonly DashboardTileConfig[] = [
     },
     actions: [
       { label: "Grafana 首页", href: "/svc/grafana/", enabled: true },
-      { label: "GPU 总览", href: "", enabled: false, hint: "待配置" },
+      {
+        label: "GPU 总览",
+        href: "/svc/grafana/d/Oxed_c6Wz2/9b2185c?orgId=1&from=now-15m&to=now&timezone=browser&var-instance=dx0:9400&var-gpu=$__all",
+        enabled: true,
+        hint: "打开 GPU 监控总览",
+      },
       { label: "节点资源", href: "", enabled: false, hint: "待配置" },
       { label: "磁盘容量", href: "", enabled: false, hint: "待配置" },
       { label: "目录用量", href: "", enabled: false, hint: "待配置" },

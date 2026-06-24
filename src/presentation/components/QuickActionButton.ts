@@ -2,7 +2,7 @@ import type { DashboardAction } from "../../infrastructure/dashboard/dashboardCa
 
 /**
  * 胶囊按钮（macOS/iOS 风格）。
- * enabled 时点击新标签页打开，disabled 时灰色不可点击。
+ * enabled 时当前页跳转，disabled 时灰色不可点击。
  */
 export function createQuickActionButton(action: DashboardAction): HTMLElement {
   const btn = document.createElement("button");
@@ -15,7 +15,7 @@ export function createQuickActionButton(action: DashboardAction): HTMLElement {
 
   if (action.enabled) {
     btn.addEventListener("click", () => {
-      window.open(action.href, "_blank", "noopener,noreferrer");
+      window.location.href = action.href;
     });
   } else {
     btn.disabled = true;

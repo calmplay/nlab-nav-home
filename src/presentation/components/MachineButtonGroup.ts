@@ -8,7 +8,7 @@ const clashUseCase = new OpenClashDashboardUseCase();
  * 机器按钮组。
  *
  * - kind === "clash"     → OpenClashDashboardUseCase（externalControllers 机制）
- * - kind === "syncthing" → href 新标签页打开
+ * - kind === "syncthing" → href 当前页跳转
  * - onClick              → 自定义回调
  */
 export function createMachineButtonGroup(
@@ -32,7 +32,7 @@ export function createMachineButtonGroup(
       }
     } else {
       btn.addEventListener("click", () => {
-        window.open(m.href, "_blank", "noopener,noreferrer");
+        window.location.href = m.href;
       });
     }
 
