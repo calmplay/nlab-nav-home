@@ -1,9 +1,5 @@
-# navigation-dashboard Specification
+## MODIFIED Requirements
 
-## Purpose
-
-The navigation dashboard is the primary user interface for accessing NLab services through the 1104 gateway.
-## Requirements
 ### Requirement: Render the Bento dashboard as the first screen
 
 The system SHALL render a macOS / iOS inspired Bento dashboard on the homepage and SHALL identify whether the user is viewing the stable gateway or a preview gateway when that can be inferred from the browser port.
@@ -34,23 +30,6 @@ The dashboard SHALL group primary services into stable tiles and SHALL expose co
 - **And** each tile SHALL expose its primary service purpose in concise text
 - **And** each primary service tile SHALL show compact operational facts such as entry mode, authentication expectation, or fallback rationale
 
-### Requirement: Open service actions predictably
-
-Enabled service actions SHALL open the intended service entry without replacing the dashboard unless the current flow intentionally moves into an embedded dashboard.
-
-#### Scenario: User opens a normal service action
-
-- **Given** a tile action has `enabled: true`
-- **When** the user activates the action
-- **Then** the system SHALL navigate to the configured safe entry point
-
-#### Scenario: User sees an unavailable or planned action
-
-- **Given** a tile action has `enabled: false`
-- **When** the dashboard renders
-- **Then** the action SHALL be visibly disabled
-- **And** it SHALL NOT attempt navigation
-
 ### Requirement: Keep dashboard content data-driven
 
 The dashboard SHALL read tile labels, actions, machine buttons, plan items, and operational facts from typed catalog data.
@@ -66,15 +45,4 @@ The dashboard SHALL read tile labels, actions, machine buttons, plan items, and 
 - **Given** the dashboard catalog changes
 - **When** the header renders
 - **Then** service counts SHALL be derived from catalog data instead of hard-coded literals
-
-### Requirement: Preserve frontend learning clarity
-
-The dashboard implementation SHALL remain understandable to a backend-oriented developer learning frontend development.
-
-#### Scenario: Developer traces a visible tile
-
-- **Given** a visible dashboard tile
-- **When** the developer searches for its label in source
-- **Then** the developer SHALL find the data in a catalog
-- **And** SHALL be able to trace the catalog data into DOM components and CSS classes
 

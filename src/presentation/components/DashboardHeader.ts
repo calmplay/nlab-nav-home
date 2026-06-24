@@ -1,3 +1,5 @@
+import { DASHBOARD_TILES } from "../../infrastructure/dashboard/dashboardCatalog";
+
 /**
  * 顶部标题栏 —— 标题 + 副标题 + 统计。
  */
@@ -16,7 +18,7 @@ export function createDashboardHeader(): HTMLElement {
 
   const p = document.createElement("p");
   p.className = "header-subtitle";
-  p.textContent = "统一入口 · 内部服务 · 本地维护 · 1104 网关";
+  p.textContent = "统一入口 · 内部服务 · 本地维护";
   left.appendChild(p);
 
   header.appendChild(left);
@@ -24,11 +26,73 @@ export function createDashboardHeader(): HTMLElement {
   // 右侧统计
   const right = document.createElement("div");
   right.className = "header-stats";
-  right.innerHTML =
-    '<span class="stat"><strong class="stat-num">10</strong> services</span>' +
-    '<span class="stat-divider"></span>' +
-    '<span class="stat stat--ready"><strong class="stat-num">10</strong> available</span>';
+  const stats = computeDashboardStats();
+  right.appendChild(createEnvironmentBadge());
+  right.appendChild(createStat(`${stats.entries}`, "entries"));
+  right.appendChild(createDivider());
+  right.appendChild(createStat(`${stats.gatewayTiles}`, "gateway tiles", "stat--ready"));
   header.appendChild(right);
 
   return header;
+}
+
+function createEnvironmentBadge(): HTMLElement {
+  const badge = document.createElement("span");
+  badge.className = "env-badge";
+
+  const port = window.location.port;
+  if (port === "1105") {
+    badge.classList.add("env-badge--preview");
+    badge.textContent = "1105 preview";
+    badge.title = "预览环境，不覆盖 1104 稳定版本";
+  } else if (port === "1104" || port === "") {
+    badge.classList.add("env-badge--stable");
+    badge.textContent = "1104 stable";
+    badge.title = "当前稳定网关入口";
+  } else {
+    badge.textContent = `${port} local`;
+    badge.title = "本地或临时预览环境";
+  }
+
+  return badge;
+}
+
+function createStat(value: string, label: string, extraClass?: string): HTMLElement {
+  const stat = document.createElement("span");
+  stat.className = extraClass ? `stat ${extraClass}` : "stat";
+
+  const strong = document.createElement("strong");
+  strong.className = "stat-num";
+  strong.textContent = value;
+  stat.appendChild(strong);
+
+  stat.append(" ", label);
+  return stat;
+}
+
+function createDivider(): HTMLElement {
+  const divider = document.createElement("span");
+  divider.className = "stat-divider";
+  return divider;
+}
+
+function computeDashboardStats(): { entries: number; gatewayTiles: number } {
+  let entries = 0;
+  let gatewayTiles = 0;
+
+  for (const tile of DASHBOARD_TILES) {
+    if (tile.id !== "plan") {
+      gatewayTiles += 1;
+    }
+
+    if (tile.machines) {
+      entries += tile.machines.length;
+    } else if (tile.subTiles) {
+      entries += tile.subTiles.length;
+    } else if (tile.primaryAction?.enabled) {
+      entries += 1;
+    }
+  }
+
+  return { entries, gatewayTiles };
 }

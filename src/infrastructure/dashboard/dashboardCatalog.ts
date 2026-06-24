@@ -29,6 +29,12 @@ export interface PlanItem {
   readonly target: string;
 }
 
+/** 运维上下文事实：短标签 + 可选说明 */
+export interface DashboardOpsFact {
+  readonly label: string;
+  readonly detail?: string;
+}
+
 /** 子 tile（用于 Remote stack） */
 export interface SubTile {
   readonly title: string;
@@ -58,6 +64,8 @@ export interface DashboardTileConfig {
   readonly subTiles?: readonly SubTile[];
   /** 接入计划列表（plan tile 专用） */
   readonly planItems?: readonly PlanItem[];
+  /** 运维上下文提示（展示为紧凑 chip） */
+  readonly opsFacts?: readonly DashboardOpsFact[];
 }
 
 /** 6 个 Bento tile 的完整布局配置 */
@@ -72,6 +80,11 @@ export const DASHBOARD_TILES: readonly DashboardTileConfig[] = [
     variant: "hero",
     accent: "blue",
     status: "jump",
+    opsFacts: [
+      { label: "svc reverse proxy", detail: "通过 /svc/grafana/ 子路径反向代理访问" },
+      { label: "Grafana login", detail: "使用现有 Grafana 登录方式" },
+      { label: "root_url configured", detail: "服务端已配置子路径 root_url" },
+    ],
     primaryAction: {
       label: "Grafana 首页",
       href: "/svc/grafana/",
@@ -97,6 +110,11 @@ export const DASHBOARD_TILES: readonly DashboardTileConfig[] = [
     variant: "group",
     accent: "blue",
     status: "jump",
+    opsFacts: [
+      { label: "embedded dashboard", detail: "静态 dashboard 已迁入 1104 体系" },
+      { label: "local secret", detail: "secret 仅保存在浏览器本地，不进入 URL" },
+      { label: "API proxy", detail: "通过机器 cookie 选择后端 Clash API" },
+    ],
     machines: [
       { kind: "clash", label: "dx0", href: "", hint: "点击输入 secret 后直达 dx0 管理页" },
       { kind: "clash", label: "dx1", href: "", hint: "点击输入 secret 后直达 dx1 管理页" },
@@ -118,6 +136,11 @@ export const DASHBOARD_TILES: readonly DashboardTileConfig[] = [
     variant: "stack",
     accent: "gray",
     status: "jump",
+    opsFacts: [
+      { label: "jump fallback", detail: "Router / iLO 均保留稳定旧入口" },
+      { label: "cert warning", detail: "iLO 可能出现自签名证书提示" },
+      { label: "sub-path risk", detail: "硬件设备页面不强行做子路径反代" },
+    ],
     subTiles: [
       {
         title: "Router",
@@ -144,6 +167,11 @@ export const DASHBOARD_TILES: readonly DashboardTileConfig[] = [
     variant: "tool",
     accent: "orange",
     status: "jump",
+    opsFacts: [
+      { label: "svc reverse proxy", detail: "通过 /svc/prometheus/ 子路径反向代理访问" },
+      { label: "Basic Auth", detail: "Prometheus 保留现有 Basic Auth" },
+      { label: "query tool", detail: "适合直接查询原始指标" },
+    ],
     primaryAction: {
       label: "打开查询",
       href: "/svc/prometheus/",
@@ -162,6 +190,11 @@ export const DASHBOARD_TILES: readonly DashboardTileConfig[] = [
     variant: "group",
     accent: "green",
     status: "jump",
+    opsFacts: [
+      { label: "jump only", detail: "Syncthing 不适合子路径部署" },
+      { label: "per-machine UI", detail: "每台机器保留独立管理入口" },
+      { label: "old ports kept", detail: "旧端口保留，1104 只做稳定跳转" },
+    ],
     machines: [
       { kind: "syncthing", label: "dx0", href: "/jump/syncthing-0/" },
       { kind: "syncthing", label: "dx1", href: "/jump/syncthing-1/" },
@@ -182,6 +215,10 @@ export const DASHBOARD_TILES: readonly DashboardTileConfig[] = [
     variant: "plan",
     accent: "gray",
     status: "planned",
+    opsFacts: [
+      { label: "gateway-v1 baseline", detail: "当前版本已固定为 OpenSpec 基线" },
+      { label: "1105 preview", detail: "后续增强先在 1105 验证，不覆盖 1104" },
+    ],
     planItems: [
       { name: "Prometheus 已接入", target: "/svc/prometheus/" },
       { name: "Grafana 已接入", target: "/svc/grafana/" },

@@ -43,8 +43,16 @@
 
 /* ── 响应式 ── */
 @media (max-width: 1100px) {
+  html,
   body {
+    height: auto;
+    min-height: 100%;
     overflow: auto;
+  }
+
+  #app {
+    height: auto;
+    min-height: 100vh;
   }
 
   .dashboard-shell {
@@ -70,8 +78,16 @@
 }
 
 @media (max-width: 720px) {
+  html,
   body {
+    height: auto;
+    min-height: 100%;
     overflow: auto;
+  }
+
+  #app {
+    height: auto;
+    min-height: 100vh;
   }
 
   .dashboard-shell {

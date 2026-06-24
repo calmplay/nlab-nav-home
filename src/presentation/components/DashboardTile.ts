@@ -33,6 +33,10 @@ export function createDashboardTile(config: DashboardTileConfig): HTMLElement {
   head.appendChild(createStatusPill(config.status));
   tile.appendChild(head);
 
+  if (config.opsFacts && config.opsFacts.length > 0) {
+    tile.appendChild(buildOpsFacts(config));
+  }
+
   // ── 主体：按 variant 渲染 ──
   switch (config.variant) {
     case "hero":
@@ -53,6 +57,24 @@ export function createDashboardTile(config: DashboardTileConfig): HTMLElement {
   }
 
   return tile;
+}
+
+/** 运维上下文：入口方式 / 登录预期 / 降级原因 */
+function buildOpsFacts(config: DashboardTileConfig): HTMLElement {
+  const facts = document.createElement("div");
+  facts.className = "ops-facts";
+
+  for (const fact of config.opsFacts ?? []) {
+    const chip = document.createElement("span");
+    chip.className = "ops-fact";
+    chip.textContent = fact.label;
+    if (fact.detail) {
+      chip.title = fact.detail;
+    }
+    facts.appendChild(chip);
+  }
+
+  return facts;
 }
 
 /** Hero tile：大卡片 + 快捷操作列表 + 主按钮 */
