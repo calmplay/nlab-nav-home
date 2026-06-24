@@ -7,6 +7,7 @@ export const CLASH_MACHINES: readonly ClashMachine[] = [
   { id: "dx2", label: "dx2", apiPort: 17802 },
   { id: "dx3", label: "dx3", apiPort: 17803 },
   { id: "dx4", label: "dx4", apiPort: 17804 },
+  { id: "dx5", label: "dx5", apiPort: 17805 },
   { id: "dx8", label: "dx8", apiPort: 17808 },
 ];
 
