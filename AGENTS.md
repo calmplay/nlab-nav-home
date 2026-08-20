@@ -2,7 +2,7 @@
 
 ## 项目定位
 
-NLab 实验室课题组服务总导航主页。通过 0 号机 nginx 1104 端口提供统一 Web 入口，一站式访问课题组全部内部服务（Prometheus、Grafana、Router、iLO、Clash、Syncthing 等）。
+NLab 实验室课题组服务总导航主页。通过 0 号机 nginx 1104 端口提供统一 Web 入口，一站式访问课题组内部服务（Prometheus、Grafana、Router、iLO、Clash 等）。
 
 GitHub: https://github.com/calmplay/nlab-nav-home
 
@@ -100,7 +100,6 @@ Nginx 运行在 Docker 容器 `nginx`（nginx:1.22.1，host 网络模式），�
 | Clash dashboard | `/clash/` | 静态 SPA + API 代理 |
 | Router | `/jump/router/` | 302 跳转 |
 | iLO | `/jump/ilo/` | 302 跳转 |
-| Syncthing ×5 | `/jump/syncthing-*/` | 302 跳转 |
 | Clash 旧网关 | `:17900`（保留，不再做新主入口依赖） |
 
 ## 提交约定

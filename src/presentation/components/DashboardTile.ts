@@ -101,7 +101,31 @@ function buildHeroBody(config: DashboardTileConfig): HTMLElement {
     body.appendChild(primary);
   }
 
+  if (config.embeddedPanel) {
+    body.appendChild(buildEmbeddedPanel(config));
+  }
+
   return body;
+}
+
+function buildEmbeddedPanel(config: DashboardTileConfig): HTMLElement {
+  const panel = document.createElement("div");
+  panel.className = "embedded-panel";
+
+  const frame = document.createElement("iframe");
+  frame.className = "embedded-panel-frame";
+  frame.title = config.embeddedPanel?.title ?? "embedded preview";
+  frame.loading = "lazy";
+  frame.referrerPolicy = "same-origin";
+  frame.src = config.embeddedPanel?.src ?? "";
+  panel.appendChild(frame);
+
+  const fallback = document.createElement("p");
+  fallback.className = "embedded-panel-fallback";
+  fallback.textContent = config.embeddedPanel?.fallbackText ?? "";
+  panel.appendChild(fallback);
+
+  return panel;
 }
 
 /** Group tile：主按钮 + 机器按钮组 */

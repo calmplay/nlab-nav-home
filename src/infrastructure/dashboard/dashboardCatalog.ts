@@ -19,6 +19,7 @@ export interface MachineButton {
   readonly kind: MachineButtonKind;
   readonly label: string;
   readonly href: string;
+  readonly enabled?: boolean;
   readonly hint?: string;
   readonly onClick?: () => void;
 }
@@ -35,6 +36,13 @@ export interface DashboardOpsFact {
   readonly detail?: string;
 }
 
+/** 嵌入式预览面板（例如 Grafana d-solo panel） */
+export interface EmbeddedPanel {
+  readonly title: string;
+  readonly src: string;
+  readonly fallbackText: string;
+}
+
 /** 子 tile（用于 Remote stack） */
 export interface SubTile {
   readonly title: string;
@@ -45,7 +53,7 @@ export interface SubTile {
 
 export type TileVariant = "hero" | "group" | "stack" | "tool" | "plan";
 export type TileAccent = "blue" | "green" | "orange" | "gray";
-export type TileStatus = "ready" | "planned" | "jump";
+export type TileStatus = "ready" | "planned" | "jump" | "deprecated";
 
 export interface DashboardTileConfig {
   readonly id: string;
@@ -66,6 +74,8 @@ export interface DashboardTileConfig {
   readonly planItems?: readonly PlanItem[];
   /** 运维上下文提示（展示为紧凑 chip） */
   readonly opsFacts?: readonly DashboardOpsFact[];
+  /** 嵌入式预览面板 */
+  readonly embeddedPanel?: EmbeddedPanel;
 }
 
 /** 6 个 Bento tile 的完整布局配置 */
@@ -82,9 +92,14 @@ export const DASHBOARD_TILES: readonly DashboardTileConfig[] = [
     status: "jump",
     opsFacts: [
       { label: "svc reverse proxy", detail: "通过 /svc/grafana/ 子路径反向代理访问" },
-      { label: "Grafana login", detail: "使用现有 Grafana 登录方式" },
+      { label: "gateway cookie", detail: "1105 预览登录后由网关代持只读凭据" },
       { label: "root_url configured", detail: "服务端已配置子路径 root_url" },
     ],
+    embeddedPanel: {
+      title: "Server Resource Overview",
+      src: "/svc/grafana/d-solo/StarsL-JOB-node/07b3d0c?var-interval=3m&orgId=1&from=now-30m&to=now&timezone=browser&var-origin_prometheus=&var-job=node_exporters&var-name=dx0-4090d-48gx4&var-instance=dx0:9100&var-total=7&var-device=$__all&var-maxmount=%2Fmhd%2Fhome&var-show_name=dx0-4090d-48gx4&panelId=198&theme=light",
+      fallbackText: "如果预览不可用，请打开完整 Grafana 资源总览页面。",
+    },
     primaryAction: {
       label: "Grafana 首页",
       href: "/svc/grafana/",
@@ -117,17 +132,18 @@ export const DASHBOARD_TILES: readonly DashboardTileConfig[] = [
     status: "jump",
     opsFacts: [
       { label: "embedded dashboard", detail: "静态 dashboard 已迁入 1104 体系" },
-      { label: "local secret", detail: "secret 仅保存在浏览器本地，不进入 URL" },
+      { label: "gateway cookie", detail: "先通过主页登录，再进入 Clash 面板" },
+      { label: "server-side secret", detail: "Clash API secret 由网关注入，不进入浏览器" },
       { label: "API proxy", detail: "通过机器 cookie 选择后端 Clash API" },
     ],
     machines: [
-      { kind: "clash", label: "dx0", href: "", hint: "点击输入 secret 后直达 dx0 管理页" },
-      { kind: "clash", label: "dx1", href: "", hint: "点击输入 secret 后直达 dx1 管理页" },
-      { kind: "clash", label: "dx2", href: "", hint: "点击输入 secret 后直达 dx2 管理页" },
-      { kind: "clash", label: "dx3", href: "", hint: "点击输入 secret 后直达 dx3 管理页" },
-      { kind: "clash", label: "dx4", href: "", hint: "点击输入 secret 后直达 dx4 管理页" },
-      { kind: "clash", label: "dx5", href: "", hint: "点击输入 secret 后直达 dx5 管理页" },
-      { kind: "clash", label: "dx8", href: "", hint: "点击输入 secret 后直达 dx8 管理页" },
+      { kind: "clash", label: "dx0", href: "", hint: "主页登录后直达 dx0 管理页" },
+      { kind: "clash", label: "dx1", href: "", hint: "主页登录后直达 dx1 管理页" },
+      { kind: "clash", label: "dx2", href: "", hint: "主页登录后直达 dx2 管理页" },
+      { kind: "clash", label: "dx3", href: "", hint: "主页登录后直达 dx3 管理页" },
+      { kind: "clash", label: "dx4", href: "", hint: "主页登录后直达 dx4 管理页" },
+      { kind: "clash", label: "dx5", href: "", hint: "主页登录后直达 dx5 管理页" },
+      { kind: "clash", label: "dx8", href: "", hint: "主页登录后直达 dx8 管理页" },
     ],
   },
 
@@ -186,27 +202,26 @@ export const DASHBOARD_TILES: readonly DashboardTileConfig[] = [
   },
 
   // ══════════════════════════════════════════════════════
-  // 5. Syncthing — group（6 列 × 1 行）
+  // 5. Syncthing — group（已弃用，仅保留停用状态）
   // ══════════════════════════════════════════════════════
   {
     id: "syncthing",
     title: "Syncthing 文件同步",
-    subtitle: "多机器同步状态与配置入口",
+    subtitle: "服务已停用；原同步文件夹内容已保留",
     variant: "group",
-    accent: "green",
-    status: "jump",
+    accent: "gray",
+    status: "deprecated",
     opsFacts: [
-      { label: "jump only", detail: "Syncthing 不适合子路径部署" },
-      { label: "per-machine UI", detail: "每台机器保留独立管理入口" },
-      { label: "old ports kept", detail: "旧端口保留，1104 只做稳定跳转" },
+      { label: "服务已卸载", detail: "所有服务器的 Syncthing 服务均已停用并卸载" },
+      { label: "数据已保留", detail: "未删除任何原同步文件夹内容" },
     ],
     machines: [
-      { kind: "syncthing", label: "dx0", href: "/jump/syncthing-0/" },
-      { kind: "syncthing", label: "dx1", href: "/jump/syncthing-1/" },
-      { kind: "syncthing", label: "dx2", href: "/jump/syncthing-2/" },
-      { kind: "syncthing", label: "dx3", href: "/jump/syncthing-3/" },
-      { kind: "syncthing", label: "dx5", href: "/jump/syncthing-5/" },
-      { kind: "syncthing", label: "dx8", href: "/jump/syncthing-8/" },
+      { kind: "syncthing", label: "dx0", href: "", enabled: false },
+      { kind: "syncthing", label: "dx1", href: "", enabled: false },
+      { kind: "syncthing", label: "dx2", href: "", enabled: false },
+      { kind: "syncthing", label: "dx3", href: "", enabled: false },
+      { kind: "syncthing", label: "dx5", href: "", enabled: false },
+      { kind: "syncthing", label: "dx8", href: "", enabled: false },
     ],
   },
 

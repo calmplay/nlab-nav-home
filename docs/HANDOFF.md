@@ -19,7 +19,7 @@
 
 ## 一句话定位
 
-`nlab-nav-home` 是 NLab 实验室服务总导航。它是一个 Vite + TypeScript + 原生 DOM + 纯 CSS 的静态前端，部署到 0 号机 nginx 的 `/home/cy/docker_vol/nginx/html/lab-nav/`，通过 `http://nuist.cfushn.com:1104/` 作为统一入口访问 Prometheus、Grafana、Clash、Syncthing、Router、iLO 等服务。
+`nlab-nav-home` 是 NLab 实验室服务总导航。它是一个 Vite + TypeScript + 原生 DOM + 纯 CSS 的静态前端，部署到 0 号机 nginx 的静态目录，通过 1104 正式入口和 1105 预览入口访问 Prometheus、Grafana、Clash、Router、iLO 等服务。
 
 ## 用户目标与偏好
 
@@ -94,7 +94,7 @@ npm run deploy:static
 | Clash | `/clash/` | 本项目托管静态 dashboard + API 代理 | 已接入 |
 | Router | `/jump/router/` | 302 跳转 | 已降级 |
 | iLO | `/jump/ilo/` | 302 跳转 | 已降级 |
-| Syncthing | `/jump/syncthing-*/` | 302 跳转 | 已降级 |
+| Syncthing | — | 无入口 | 已弃用，文件夹内容保留 |
 
 重要历史判断：
 
@@ -102,7 +102,7 @@ npm run deploy:static
 - Grafana 支持 root_url / serve_from_sub_path。
 - Router 在 `/svc/router/` 下浏览器白板，控制台出现 `Unexpected token '<'`，判断为子路径 API 不兼容，改为跳转。
 - iLO 涉及 HTTPS、自签名证书、WebSocket、硬件页面 Host 校验，保持跳转。
-- Syncthing 不适合子路径反代，保持跳转。
+- Syncthing 已于 2026-08-20 停用并撤除 nginx 跳转入口，原同步文件夹内容保留。
 - Clash secret 绝不能进入 URL。当前设计是本地 modal 输入，localStorage 保存，预检通过后写入 Clash dashboard 需要的配置并打开 `/clash/#/proxies`。
 
 ## 关键提交与标签
@@ -146,9 +146,6 @@ M src/infrastructure/service/serviceCatalog.ts
 
 - Clash 机器列表新增 `dx5`，API 端口为 `17805`。
 - Dashboard Clash tile 新增 `dx5` 按钮。
-- Syncthing 新增 `dx5` 入口 `/jump/syncthing-5/`。
-- `serviceCatalog.ts` 新增 `syncthing-5`，并把 `syncthing-8` priority 后移。
-- `nginx.example.conf` 新增 `/jump/syncthing-5/` 示例跳转。
 
 接手时必须先确认：
 
@@ -163,8 +160,6 @@ npm run build
 ```text
 feat: add dx5 service entries
 ```
-
-提交前还应确认真实服务器 nginx 已有或准备新增 `/jump/syncthing-5/`，否则前端按钮会指向不存在的跳转入口。
 
 ## 安全边界
 
@@ -195,7 +190,7 @@ feat: add dx5 service entries
 短期优先级：
 
 1. 处理当前 `dx5` 未提交改动，确认 nginx 真实配置和服务可达后提交。
-2. 更新 `docs/SERVICE_MATRIX.md`，把 dx5 Clash / Syncthing 纳入矩阵。
+2. 同步维护 `docs/SERVICE_MATRIX.md` 与实际服务状态。
 3. 如果 `gateway-v1` 后又新增 dx5，补一条 `docs/CHANGELOG.md`。
 4. 本地跑 `npm run build`，必要时部署并浏览器验证 1104 首页。
 
@@ -241,4 +236,3 @@ docs/SERVICE_INTEGRATION_NOTES.md
 3. 哪个组件把数据变成 DOM。
 4. 哪段 CSS 控制样式。
 5. 改一处小地方验证结果。
-

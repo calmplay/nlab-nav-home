@@ -4,6 +4,7 @@ const LABELS: Record<TileStatus, string> = {
   ready: "就绪",
   planned: "计划接入",
   jump: "跳转可用",
+  deprecated: "已弃用",
 };
 
 export function createStatusPill(status: TileStatus): HTMLElement {

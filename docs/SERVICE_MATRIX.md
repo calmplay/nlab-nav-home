@@ -13,8 +13,4 @@
 | 9 | Clash dx8 | Clash group tile | `/clash/#/proxies` | API 代理 | `:17900` | 就绪 | cookie clash_machine=8 |
 | 10 | Router | Remote sub-tile | `/jump/router/` | 302跳转 | `:50000` | 就地降级 | 页面 JS 子路径不兼容 |
 | 11 | iLO | Remote sub-tile | `/jump/ilo/` | 302跳转 | `:50009` | 就地降级 | HTTPS/WebSocket 子路径风险 |
-| 12 | Syncthing dx0 | Syncthing group tile | `/jump/syncthing-0/` | 302跳转 | `:50500` | 就地降级 | 不支持子路径 |
-| 13 | Syncthing dx1 | Syncthing group tile | `/jump/syncthing-1/` | 302跳转 | `:50501` | 就地降级 | 不支持子路径 |
-| 14 | Syncthing dx2 | Syncthing group tile | `/jump/syncthing-2/` | 302跳转 | `:50502` | 就地降级 | 不支持子路径 |
-| 15 | Syncthing dx3 | Syncthing group tile | `/jump/syncthing-3/` | 302跳转 | `:50503` | 就地降级 | 不支持子路径 |
-| 16 | Syncthing dx8 | Syncthing group tile | `/jump/syncthing-8/` | 302跳转 | `:50508` | 就地降级 | 不支持子路径 |
+| 12 | Syncthing | 保留停用状态 tile | — | 无入口 | — | 已弃用 | 已停用并卸载；同步文件夹内容保留 |

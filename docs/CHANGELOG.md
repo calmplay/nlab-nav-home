@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-08-20 — Syncthing 退役
+
+- 1104 与 1105 导航均将 Syncthing 标为已弃用，机器按钮灰色不可点击。
+- 撤除 `/jump/syncthing-*` 入口；同步文件夹内容保留。
+
 ## v1 — 首轮统一入口 (2026-05-29)
 
 - 初始化 nlab-nav-home（Vite + TypeScript + 纯 CSS）

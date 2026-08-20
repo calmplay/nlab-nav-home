@@ -26,14 +26,14 @@ macOS / iOS 风格 Bento Dashboard，12 列 × 3 行 CSS Grid 布局，一屏展
 | Clash 代理组 | group | col 7/11, row 1/2 | blue | jump |
 | 远程与网络 | stack | col 11/13, row 1/3 | gray | planned |
 | Prometheus | tool | col 7/11, row 2/3 | orange | planned |
-| Syncthing 文件同步 | group | col 1/7, row 3/4 | green | jump |
+| Syncthing 文件同步 | group | col 1/7, row 3/4 | gray | deprecated |
 | 下一步接入计划 | plan | col 7/13, row 3/4 | gray | planned |
 
 ### 交互规则
 
 - 所有 enabled action 统一使用 `window.open(href, "_blank", "noopener,noreferrer")` 新标签页打开。
 - planned 状态按钮 disabled，灰色不可点击。
-- 跳转入口（Clash / Syncthing）通过 nginx 1104 端口 `/jump/` 路径 302 重定向。
+- Clash 跳转入口通过 nginx 1104 端口 `/jump/` 路径 302 重定向；Syncthing 仅展示已弃用状态。
 
 ## 后续修改原则
 

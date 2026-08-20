@@ -33,7 +33,7 @@ export const BrowserClashSecretStore = {
 
   /** 清除全部机器 secret */
   clearAll(): void {
-    for (const m of ["dx0", "dx1", "dx2", "dx3", "dx4", "dx8"] as MachineId[]) {
+    for (const m of ["dx0", "dx1", "dx2", "dx3", "dx4", "dx5", "dx8"] as MachineId[]) {
       this.remove(m);
     }
   },
