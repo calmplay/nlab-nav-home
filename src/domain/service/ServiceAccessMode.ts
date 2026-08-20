@@ -3,7 +3,7 @@
  *
  * - reverse-proxy:     nginx 路径反向代理（如 /svc/router/）
  * - redirect:           通过 /jump/ 路径跳转（nginx 302）
- * - legacy-entry:       保留旧端口入口（不通过 1104 代理）
+ * - legacy-entry:       保留旧端口入口（不通过 1105 代理）
  * - external-link:      纯外链（不在本 nginx 体系内）
  * - planned:            规划中，尚未接入
  * - not-integrated:     明确暂不接入

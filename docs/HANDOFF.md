@@ -15,11 +15,11 @@
   - `docs/OPERATIONS.md`
   - `CLAUDE.md` / `AGENTS.md`
 
-共享对话标题是「Nginx 服务整合与导航页」。核心脉络是：用户希望把 0 号机现有 nginx 体系整理成实验室统一入口，尽量只通过路由器暴露的 `1104` 端口访问所有内部服务；现有服务必须保留，新增导航页和必要 nginx 配置时不能破坏旧入口。
+共享对话标题是「Nginx 服务整合与导航页」。当前目标是只维护 1105 网关：已由其接管的旧 Nginx 入口可下线，尚依赖旧端口的服务必须保留。
 
 ## 一句话定位
 
-`nlab-nav-home` 是 NLab 实验室服务总导航。它是一个 Vite + TypeScript + 原生 DOM + 纯 CSS 的静态前端，部署到 0 号机 nginx 的静态目录，通过 1104 正式入口和 1105 预览入口访问 Prometheus、Grafana、Clash、Router、iLO 等服务。
+`nlab-nav-home` 是 NLab 实验室服务总导航。它是一个 Vite + TypeScript + 原生 DOM + 纯 CSS 的静态前端，部署到 0 号机 nginx 的静态目录，通过 1105 网关访问 Prometheus、Grafana、Clash、Router、iLO 等服务。
 
 ## 用户目标与偏好
 
@@ -75,8 +75,8 @@ npm run deploy:static
 
 - 本地源码: `~/nlab/nlab-nav-home`
 - 构建产物: `dist/`
-- 服务器静态目录: `/home/cy/docker_vol/nginx/html/lab-nav/`
-- 对外入口: `http://nuist.cfushn.com:1104/`
+- 服务器静态目录: `/home/cy/docker_vol/nginx/html/lab-nav-preview/`
+- 对外入口: `http://nuist.cfushn.com:1105/`
 
 服务器只放 `dist/`，不维护 `src/`、`.git/`、`node_modules/`。
 
@@ -192,7 +192,7 @@ feat: add dx5 service entries
 1. 处理当前 `dx5` 未提交改动，确认 nginx 真实配置和服务可达后提交。
 2. 同步维护 `docs/SERVICE_MATRIX.md` 与实际服务状态。
 3. 如果 `gateway-v1` 后又新增 dx5，补一条 `docs/CHANGELOG.md`。
-4. 本地跑 `npm run build`，必要时部署并浏览器验证 1104 首页。
+4. 本地跑 `npm run build`，必要时部署并验证 1105 首页。
 
 中期可做：
 

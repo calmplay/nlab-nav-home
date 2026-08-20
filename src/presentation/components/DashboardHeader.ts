@@ -42,13 +42,13 @@ function createEnvironmentBadge(): HTMLElement {
 
   const port = window.location.port;
   if (port === "1105") {
-    badge.classList.add("env-badge--preview");
-    badge.textContent = "1105 preview";
-    badge.title = "预览环境，不覆盖 1104 稳定版本";
-  } else if (port === "1104" || port === "") {
     badge.classList.add("env-badge--stable");
-    badge.textContent = "1104 stable";
-    badge.title = "当前稳定网关入口";
+    badge.textContent = "1105 gateway";
+    badge.title = "当前唯一的实验室服务导航入口";
+  } else if (port === "") {
+    badge.classList.add("env-badge--stable");
+    badge.textContent = "gateway";
+    badge.title = "生产网关入口";
   } else {
     badge.textContent = `${port} local`;
     badge.title = "本地或临时预览环境";

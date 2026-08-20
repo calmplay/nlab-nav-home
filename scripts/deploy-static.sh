@@ -14,7 +14,7 @@
 # 行为：
 #   1. npm run build（生成最新 dist/）
 #   2. SSH 到 0 号机创建目标目录
-#   3. rsync dist/ → 0 号机 /home/cy/docker_vol/nginx/html/lab-nav/
+#   3. rsync dist/ → 0 号机 /home/cy/docker_vol/nginx/html/lab-nav-preview/
 #   4. 输出远端文件清单
 #
 # 注意：
@@ -30,7 +30,7 @@ SSH_PORT="11040"
 SSH_USER="cy"
 SSH_HOST="nuist.cfushn.com"
 SSH_KEY="$HOME/.ssh/id_ed25519"
-REMOTE_DIR="/home/cy/docker_vol/nginx/html/lab-nav"
+REMOTE_DIR="/home/cy/docker_vol/nginx/html/lab-nav-preview"
 
 SSH_OPTS="-p ${SSH_PORT} -i ${SSH_KEY}"
 
@@ -82,5 +82,5 @@ ssh ${SSH_OPTS} "${SSH_USER}@${SSH_HOST}" "ls -laR ${REMOTE_DIR}/"
 
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "✅ 部署完成 → http://nuist.cfushn.com:1104/"
+echo "✅ 部署完成 → http://nuist.cfushn.com:1105/"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

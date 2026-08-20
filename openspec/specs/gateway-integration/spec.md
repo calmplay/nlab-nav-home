@@ -2,19 +2,19 @@
 
 ## Purpose
 
-Gateway integration defines how NLab services are exposed through the 0-machine nginx gateway on port `1104`.
+Gateway integration defines how NLab services are exposed through the 0-machine nginx gateway on port `1105`.
 
 ## Requirements
 
-### Requirement: Preserve the 1104 unified entry
+### Requirement: Provide the 1105 unified entry
 
-The system SHALL expose the dashboard through the nginx gateway on port `1104`.
+The system SHALL expose the dashboard through the nginx gateway on port `1105`.
 
 #### Scenario: User opens the public gateway
 
 - **Given** nginx is running on the 0-machine
-- **When** the user opens `http://nuist.cfushn.com:1104/`
-- **Then** nginx SHALL serve the built dashboard from `/home/cy/docker_vol/nginx/html/lab-nav/`
+- **When** the user opens `http://nuist.cfushn.com:1105/`
+- **Then** nginx SHALL serve the built dashboard from `/home/cy/docker_vol/nginx/html/lab-nav-preview/`
 
 ### Requirement: Keep source and deployment separated
 
@@ -52,7 +52,7 @@ The gateway SHALL use `/jump/<service>/` redirects when sub-path reverse proxyin
 
 ### Requirement: Protect existing services during gateway changes
 
-Gateway changes SHALL preserve existing ports and old service entry points.
+Gateway changes SHALL preserve an old entry point only while a 1105 path still depends on it.
 
 #### Scenario: New location is added
 
@@ -72,4 +72,3 @@ The repository SHALL NOT store production nginx config, service secrets, Docker 
 - **Given** local changes are ready
 - **When** the developer reviews `git status`
 - **Then** no production secrets or server-only files SHALL be staged
-

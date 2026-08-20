@@ -2,8 +2,8 @@
  * 拼接 URL 路径段，确保相邻段之间只有一个 '/'。
  *
  * 示例：
- *   joinPath('http://example.com:1104', 'svc', 'router/')
- *   → 'http://example.com:1104/svc/router/'
+ *   joinPath('http://example.com:1105', 'svc', 'router/')
+ *   → 'http://example.com:1105/svc/router/'
  */
 export function joinPath(...segments: string[]): string {
   return segments

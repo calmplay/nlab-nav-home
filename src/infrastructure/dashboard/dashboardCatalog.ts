@@ -104,7 +104,7 @@ export const DASHBOARD_TILES: readonly DashboardTileConfig[] = [
       label: "Grafana 首页",
       href: "/svc/grafana/",
       enabled: true,
-      hint: "通过 1104 统一入口访问",
+      hint: "通过 1105 统一入口访问",
     },
     actions: [
       { label: "Grafana 首页", href: "/svc/grafana/", enabled: true },
@@ -131,7 +131,7 @@ export const DASHBOARD_TILES: readonly DashboardTileConfig[] = [
     accent: "blue",
     status: "jump",
     opsFacts: [
-      { label: "embedded dashboard", detail: "静态 dashboard 已迁入 1104 体系" },
+      { label: "embedded dashboard", detail: "静态 dashboard 已迁入 1105 网关" },
       { label: "gateway cookie", detail: "先通过主页登录，再进入 Clash 面板" },
       { label: "server-side secret", detail: "Clash API secret 由网关注入，不进入浏览器" },
       { label: "API proxy", detail: "通过机器 cookie 选择后端 Clash API" },
@@ -197,7 +197,7 @@ export const DASHBOARD_TILES: readonly DashboardTileConfig[] = [
       label: "打开查询",
       href: "/svc/prometheus/",
       enabled: true,
-      hint: "通过 1104 统一入口访问，需 Basic Auth",
+      hint: "通过 1105 统一入口访问，需网关认证",
     },
   },
 
@@ -237,7 +237,7 @@ export const DASHBOARD_TILES: readonly DashboardTileConfig[] = [
     status: "planned",
     opsFacts: [
       { label: "gateway-v1 baseline", detail: "当前版本已固定为 OpenSpec 基线" },
-      { label: "1105 preview", detail: "后续增强先在 1105 验证，不覆盖 1104" },
+      { label: "1105 gateway", detail: "1105 是唯一维护和发布入口" },
     ],
     planItems: [
       { name: "Prometheus 已接入", target: "/svc/prometheus/" },

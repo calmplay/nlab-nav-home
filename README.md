@@ -109,7 +109,7 @@ npm run preview:local
                            ▼
 ┌─────────────────────────────────────────────────────────────┐
 │  0 号机（只放构建产物，不开发）                                │
-│  /home/cy/docker_vol/nginx/html/lab-nav/                    │
+│  /home/cy/docker_vol/nginx/html/lab-nav-preview/            │
 │  ├── index.html                                             │
 │  └── assets/                                                │
 │       ├── index-XXXXXXXX.js                                 │
@@ -117,7 +117,7 @@ npm run preview:local
 └──────────────────────────┬──────────────────────────────────┘
                            │ nginx 读取
                            ▼
-               http://nuist.cfushn.com:1104/
+               http://nuist.cfushn.com:1105/
 ```
 
 ### 为什么不在服务器上开发前端
@@ -138,7 +138,7 @@ npm run dev
 npm run deploy:static
 
 # 4. 浏览器访问验证
-# http://nuist.cfushn.com:1104/
+# http://nuist.cfushn.com:1105/
 ```
 
 ### dist/ 和 src/ 的区别
@@ -163,8 +163,8 @@ npm run deploy:static
 
 # 3. 或手动回滚 nginx 配置
 ssh -p 11040 cy@nuist.cfushn.com
-mv /home/cy/docker_vol/nginx/conf/conf.d/nlab-nav.conf \
-   /home/cy/docker_vol/nginx/conf/conf.d/nlab-nav.conf.bak
+mv /home/cy/docker_vol/nginx/conf/conf.d/nlab-nav-preview.conf \
+   /home/cy/docker_vol/nginx/conf/conf.d/nlab-nav-preview.conf.bak
 docker exec nginx nginx -t && docker exec nginx nginx -s reload
 ```
 
@@ -175,7 +175,7 @@ docker exec nginx nginx -t && docker exec nginx nginx -s reload
 npm run deploy:static
 ```
 
-产物在 `dist/` 目录，通过 rsync 同步到 0 号机的 `/home/cy/docker_vol/nginx/html/lab-nav/`。
+产物在 `dist/` 目录，通过 rsync 同步到 0 号机的 `/home/cy/docker_vol/nginx/html/lab-nav-preview/`，由 1105 网关提供服务。
 
 ## 安全
 

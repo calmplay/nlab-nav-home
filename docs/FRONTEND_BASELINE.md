@@ -12,7 +12,7 @@
 - 不引入任何 UI 框架（React / Vue / Tailwind 等）
 - 本地开发路径: `~/nlab/nlab-nav-home`
 - 部署命令: `npm run deploy:static`
-- 服务器静态目录: `/home/cy/docker_vol/nginx/html/lab-nav/`
+- 服务器静态目录: `/home/cy/docker_vol/nginx/html/lab-nav-preview/`
 
 ## 当前页面设计
 
@@ -33,7 +33,7 @@ macOS / iOS 风格 Bento Dashboard，12 列 × 3 行 CSS Grid 布局，一屏展
 
 - 所有 enabled action 统一使用 `window.open(href, "_blank", "noopener,noreferrer")` 新标签页打开。
 - planned 状态按钮 disabled，灰色不可点击。
-- Clash 跳转入口通过 nginx 1104 端口 `/jump/` 路径 302 重定向；Syncthing 仅展示已弃用状态。
+- Clash 通过 nginx 1105 端口的 `/clash/` 与 API 路径代理；Syncthing 仅展示已弃用状态。
 
 ## 后续修改原则
 

@@ -2,7 +2,7 @@
 
 ## 项目定位
 
-NLab 实验室课题组服务总导航主页。通过 0 号机 nginx 1104 端口提供统一 Web 入口，一站式访问课题组内部服务（Prometheus、Grafana、Router、iLO、Clash 等）。
+NLab 实验室课题组服务总导航主页。通过 0 号机 nginx 1105 端口提供唯一 Web 入口，一站式访问课题组内部服务（Prometheus、Grafana、Router、iLO、Clash 等）。
 
 GitHub: https://github.com/calmplay/nlab-nav-home
 
@@ -43,10 +43,10 @@ MacBook (~/nlab/nlab-nav-home)  ← 唯一源码位置
 dist/                            ← 构建产物（.gitignore）
   │  rsync (scripts/deploy-static.sh)
   ▼
-0号机 /home/cy/docker_vol/nginx/html/lab-nav/   ← 服务器只收 dist
+0号机 /home/cy/docker_vol/nginx/html/lab-nav-preview/   ← 服务器只收 dist
   │  nginx 读取 (Docker nginx:1.22.1, host 网络模式)
   ▼
-http://nuist.cfushn.com:1104/    ← 统一入口
+http://nuist.cfushn.com:1105/    ← 唯一入口
 ```
 
 ```bash
@@ -66,10 +66,10 @@ ssh -p 11040 -i ~/.ssh/id_ed25519 cy@nuist.cfushn.com
 Nginx 运行在 Docker 容器 `nginx`（nginx:1.22.1，host 网络模式），配置文件挂载：
 - 主配置：`/home/cy/docker_vol/nginx/conf/nginx.conf`
 - Server blocks：`/home/cy/docker_vol/nginx/conf/conf.d/`
-- 静态文件：`/home/cy/docker_vol/nginx/html/`（本项目的 dist 部署到其下的 `lab-nav/` 子目录）
+- 静态文件：`/home/cy/docker_vol/nginx/html/`（本项目的 dist 部署到其下的 `lab-nav-preview/` 子目录）
 - 日志：`/home/cy/docker_vol/nginx/log/`
 
-本项目 nginx 配置文件：`/home/cy/docker_vol/nginx/conf/conf.d/nlab-nav.conf`（1104 端口 server block）
+本项目 nginx 配置文件：`/home/cy/docker_vol/nginx/conf/conf.d/nlab-nav-preview.conf`（1105 端口 server block）
 
 重载 nginx：`docker exec nginx nginx -t && docker exec nginx nginx -s reload`
 
@@ -100,7 +100,6 @@ Nginx 运行在 Docker 容器 `nginx`（nginx:1.22.1，host 网络模式），�
 | Clash dashboard | `/clash/` | 静态 SPA + API 代理 |
 | Router | `/jump/router/` | 302 跳转 |
 | iLO | `/jump/ilo/` | 302 跳转 |
-| Clash 旧网关 | `:17900`（保留，不再做新主入口依赖） |
 
 ## 提交约定
 

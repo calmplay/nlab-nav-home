@@ -2,18 +2,18 @@
 
 ## Purpose
 
-`nlab-nav-home` provides a unified web entry for NLab internal services through the 0-machine nginx gateway on port `1104`.
+`nlab-nav-home` provides the unified web entry for NLab internal services through the 0-machine nginx gateway on port `1105`.
 
 The project turns scattered service ports and legacy entry points into a stable dashboard that users can open at:
 
 ```text
-http://nuist.cfushn.com:1104/
+http://nuist.cfushn.com:1105/
 ```
 
 ## Product Principles
 
-1. Preserve existing services and old entry points.
-2. Prefer one public gateway port, `1104`, for user-facing access.
+1. Preserve only legacy entry points still required by a 1105 path.
+2. Use public gateway port `1105` for user-facing access.
 3. Use `/svc/<service>/` reverse proxy only when the service is compatible with sub-path deployment.
 4. Use `/jump/<service>/` redirect when reverse proxy is unstable or high-risk.
 5. Treat fallback to `/jump/` as a valid product decision, not a failure.
@@ -84,4 +84,3 @@ Change IDs SHOULD be short, verb-led, and specific, for example:
 - `enable-grafana-deep-links`
 
 No code should be changed for a new feature before the proposal, design, tasks, and spec deltas are written and reviewed.
-

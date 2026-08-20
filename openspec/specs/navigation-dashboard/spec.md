@@ -2,26 +2,19 @@
 
 ## Purpose
 
-The navigation dashboard is the primary user interface for accessing NLab services through the 1104 gateway.
+The navigation dashboard is the primary user interface for accessing NLab services through the 1105 gateway.
 ## Requirements
 ### Requirement: Render the Bento dashboard as the first screen
 
-The system SHALL render a macOS / iOS inspired Bento dashboard on the homepage and SHALL identify whether the user is viewing the stable gateway or a preview gateway when that can be inferred from the browser port.
+The system SHALL render a macOS / iOS inspired Bento dashboard on the 1105 homepage and identify it as the service gateway.
 
 #### Scenario: User opens the stable homepage
-
-- **Given** the user opens `http://nuist.cfushn.com:1104/`
-- **When** the frontend bundle loads successfully
-- **Then** the page SHALL show the NLab service dashboard without requiring an additional landing page
-- **And** the dashboard SHALL prioritize service access over marketing copy
-- **And** the header SHALL identify the page as the stable 1104 gateway
-
-#### Scenario: User opens the preview homepage
 
 - **Given** the user opens `http://nuist.cfushn.com:1105/`
 - **When** the frontend bundle loads successfully
 - **Then** the page SHALL show the NLab service dashboard without requiring an additional landing page
-- **And** the header SHALL identify the page as a 1105 preview
+- **And** the dashboard SHALL prioritize service access over marketing copy
+- **And** the header SHALL identify the page as the 1105 gateway
 
 ### Requirement: Provide service-oriented tiles
 
@@ -53,7 +46,7 @@ Enabled dashboard service actions SHALL navigate in the current page to the conf
 
 #### Scenario: User opens a machine redirect action
 
-- **Given** a Syncthing, Router, or iLO action has a configured jump URL
+- **Given** a Router or iLO action has a configured jump URL
 - **When** the user activates the action
 - **Then** the current page SHALL navigate to the configured jump URL
 - **And** the action SHALL NOT open a new browser tab or window
@@ -91,4 +84,3 @@ The dashboard implementation SHALL remain understandable to a backend-oriented d
 - **When** the developer searches for its label in source
 - **Then** the developer SHALL find the data in a catalog
 - **And** SHALL be able to trace the catalog data into DOM components and CSS classes
-
